@@ -1,0 +1,9 @@
+version: "3"
+services: 
+  backend:
+    build: ./backend
+    image: be-futbol-matches:latest
+    pull_policy: if_not_present
+    container_name: be-futbol-matches
+    ports:
+      - "8080:8080"
