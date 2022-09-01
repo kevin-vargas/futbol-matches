@@ -1,0 +1,51 @@
+name: cd
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '**.go'
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    env:
+      DOCKER_REGISTRY: docker.fast.ar
+      IMAGE_NAME: docker.fast.ar/be-futbol-matches:latest
+      PLATFORMS: linux/amd64,linux/arm64
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      - name: Log in to the Container registry
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.DOCKER_REGISTRY }}
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      - name: Build and push docker
+        uses: docker/build-push-action@v3
+        with:
+          context: "./backend"
+          push: true
+          tags: ${{ env.IMAGE_NAME }}
+          platforms: ${{ env.PLATFORMS }}
+      - name: Image digest
+        run: echo ${{ steps.docker_build.outputs.digest }}
+  deploy:
+    runs-on: ubuntu-20.04
+    needs: build
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-hub/kubectl@master
+        env:
+          KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
+        with:
+          args: apply -f publish/deployment.yml
+      - uses: actions-hub/kubectl@master
+        env:
+          KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
+        with:
+          args: rollout restart deployment be-futbol-matches -n tacs
