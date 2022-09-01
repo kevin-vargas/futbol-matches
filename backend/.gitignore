@@ -1,0 +1,23 @@
+HELP.md
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+out/
+
+### VS Code ###
+.vscode/
+
+#MacOS
+.DS_Store
+
+#Binary
+golang-template
+
+#Coverage
+coverage.out
+
+#development
+.env
