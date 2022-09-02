@@ -9,10 +9,11 @@ import (
 	"github.com/go-chi/chi/v5"
 )
 
-func SetupDefaultRoutes(r *chi.Mux) {
+func SetupDefaultRoutes(r *chi.Mux, metricsHandler http.Handler) {
 	r.Get("/health", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 	})
+	r.Handle("/metrics", metricsHandler)
 }
 
 func SetupAuthRoutes(r *chi.Mux, ha handler.Auth) {
