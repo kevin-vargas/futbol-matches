@@ -5,6 +5,8 @@ import (
 
 	"backend/config"
 	"backend/handler"
+	"backend/middleware"
+	"backend/pkg/metrics"
 	"backend/router"
 	"backend/service"
 
@@ -12,11 +14,16 @@ import (
 )
 
 func main() {
+	metrics.Register()
 	cfg := config.New()
 	s := service.New()
 	h := handler.New(s)
 	r := chi.NewRouter()
-	router.SetupDefaultRoutes(r)
+
+	// global middlewares
+	r.Use(middleware.CountRequest)
+
+	router.SetupDefaultRoutes(r, metrics.NewHandler())
 	router.SetupRoutes(r, h)
 	err := http.ListenAndServe(cfg.App.Port, r)
 	if err != nil {
