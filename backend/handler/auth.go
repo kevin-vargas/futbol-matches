@@ -2,6 +2,7 @@ package handler
 
 import (
 	"backend/model"
+	"backend/pkg/metrics"
 	"backend/service"
 	"net/http"
 )
@@ -25,6 +26,9 @@ func (a *Auth) SingUp(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusConflict)
 		return
 	}
+	metrics.RegisteredUsers.Inc()
+	metrics.CreatedMatches.Inc()
+	metrics.AnnotatedUsers.Inc()
 	w.WriteHeader(http.StatusCreated)
 }
 

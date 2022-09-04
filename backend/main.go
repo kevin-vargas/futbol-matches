@@ -7,6 +7,7 @@ import (
 	"backend/handler"
 	"backend/middleware"
 	"backend/pkg/jwt"
+	"backend/pkg/metrics"
 	"backend/repository"
 	"backend/router"
 	"backend/service"
@@ -17,6 +18,7 @@ import (
 
 func main() {
 	// config
+	metrics.Register()
 	cfg := config.New()
 	// repositories
 	ur := repository.NewUser()
@@ -32,7 +34,14 @@ func main() {
 	ha := handler.NewAuth(sa)
 
 	r := chi.NewRouter()
-	router.SetupDefaultRoutes(r)
+
+	// global middlewares
+	r.Use(middleware.CountRequest)
+
+	// global middlewares
+	r.Use(middleware.CountRequest)
+
+	router.SetupDefaultRoutes(r, metrics.NewHandler())
 	router.SetupAuthRoutes(r, ha)
 	router.SetupHelloRoutes(r, h, middleware.Auth(j))
 

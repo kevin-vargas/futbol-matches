@@ -1,9 +1,35 @@
 version: "3"
 services: 
   backend:
+    container_name: api-futbol-matches
     build: ./backend
     image: be-futbol-matches:latest
-    pull_policy: if_not_present
-    container_name: be-futbol-matches
+    pull_policy: build
     ports:
       - "8080:8080"
+    networks:
+      - docker-service
+  prometheus:
+    container_name: prometheus
+    image: prom/prometheus:latest
+    volumes:
+            - ./metrics/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - 9090:9090
+    networks:
+      - docker-service
+  grafana:
+    container_name: grafana
+    image: grafana/grafana:latest
+    volumes:
+            - ./metrics/grafana/grafana.ini:/etc/grafana/grafana.ini
+            - ./metrics/grafana/datasource.yml:/etc/grafana/provisioning/datasources/datasource.yaml
+            - ./metrics/grafana/data:/var/lib/grafana
+    ports:
+      - 3000:3000
+    networks:
+      - docker-service
+
+networks:
+  docker-service:
+    driver: bridge
