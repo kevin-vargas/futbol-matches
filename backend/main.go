@@ -17,7 +17,6 @@ import (
 )
 
 func main() {
-	metrics.Register()
 	// config
 	metrics.Register()
 	cfg := config.New()

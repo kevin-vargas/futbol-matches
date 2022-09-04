@@ -14,8 +14,34 @@ var RequestCounter = prometheus.NewCounter(
 	},
 )
 
+var AnnotatedUsers = prometheus.NewCounter(
+	prometheus.CounterOpts{
+		Name: "annotated_users",
+		Help: "Number of Annotated Users",
+	},
+)
+
+var CreatedMatches = prometheus.NewCounter(
+	prometheus.CounterOpts{
+		Name: "created_matches",
+		Help: "Number of Created Matcheds",
+	},
+)
+
+var RegisteredUsers = prometheus.NewCounter(
+	prometheus.CounterOpts{
+		Name: "registered_users",
+		Help: "Number of Registered Users",
+	},
+)
+
 func Register() {
-	prometheus.MustRegister(RequestCounter)
+	prometheus.MustRegister(
+		RequestCounter,
+		AnnotatedUsers,
+		CreatedMatches,
+		RegisteredUsers,
+	)
 }
 
 func NewHandler() http.Handler {
