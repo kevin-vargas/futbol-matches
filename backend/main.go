@@ -17,6 +17,7 @@ import (
 )
 
 func main() {
+	metrics.Register()
 	// config
 	metrics.Register()
 	cfg := config.New()
@@ -34,6 +35,9 @@ func main() {
 	ha := handler.NewAuth(sa)
 
 	r := chi.NewRouter()
+
+	// global middlewares
+	r.Use(middleware.CountRequest)
 
 	// global middlewares
 	r.Use(middleware.CountRequest)
