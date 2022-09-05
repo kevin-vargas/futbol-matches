@@ -16,8 +16,10 @@ func main() {
 	s := service.New()
 	h := handler.New(s)
 	r := chi.NewRouter()
+	mh := handler.NewMatchHandler()
 	router.SetupDefaultRoutes(r)
 	router.SetupRoutes(r, h)
+	router.SetupMatchCrudRoutes(r, mh)
 	err := http.ListenAndServe(cfg.App.Port, r)
 	if err != nil {
 		panic(err)
