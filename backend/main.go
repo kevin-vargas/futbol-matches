@@ -34,7 +34,8 @@ func main() {
 	ha := handler.NewAuth(sa)
 
 	r := chi.NewRouter()
-	mh := handler.NewMatchHandler()
+	ms := service.NewMatchService()
+	mh := handler.NewMatchHandler(ms)
 
 	// global middlewares
 	r.Use(middleware.CountRequest)

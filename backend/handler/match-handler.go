@@ -2,6 +2,7 @@ package handler
 
 import (
 	"backend/model"
+	"backend/service"
 	"encoding/json"
 	"net/http"
 
@@ -9,53 +10,78 @@ import (
 )
 
 type MatchHandler struct {
+	matchService service.MatchService
 }
 
 func (matchHandler *MatchHandler) Create(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
 
 	var match model.Match
-	json.NewDecoder(r.Body).Decode(&match)
 
+	error := json.NewDecoder(r.Body).Decode(&match)
+
+	if error != nil {
+		http.Error(w, "Error en los datos recibidos "+error.Error(), 400)
+		return
+	} else {
+		matchCreated := matchHandler.matchService.CreateMatch(match)
+		if matchCreated.Id != "" {
+			w.WriteHeader(http.StatusCreated)
+			json.NewEncoder(w).Encode(matchCreated.Id)
+		} else {
+			w.WriteHeader(http.StatusNotModified)
+		}
+	}
+}
+
+func (matchHandler *MatchHandler) GetAll(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(match)
+	w.WriteHeader(http.StatusOK)
+
+	json.NewEncoder(w).Encode(matchHandler.matchService.GetAllMatches())
 }
 
 func (matchHandler *MatchHandler) Get(w http.ResponseWriter, r *http.Request) {
 	id := chi.URLParam(r, "id")
-
 	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
 
-	someMatch := new(model.Match)
-	someMatch.Id = id
-
-	json.NewEncoder(w).Encode(someMatch)
+	match := matchHandler.matchService.GetMatch(id)
+	if match.Id == "" {
+		w.WriteHeader(http.StatusNoContent)
+	} else {
+		w.WriteHeader(http.StatusOK)
+		json.NewEncoder(w).Encode(match)
+	}
 }
 
 func (matchHandler *MatchHandler) Update(w http.ResponseWriter, r *http.Request) {
-
 	id := chi.URLParam(r, "id")
-
-	var match model.Match
-	json.NewDecoder(r.Body).Decode(&match)
-	match.Id = id
+	var changes model.Match
+	error := json.NewDecoder(r.Body).Decode(&changes)
 
 	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(match)
+	if error != nil {
+		http.Error(w, "Error en los datos recibidos "+error.Error(), 400)
+		return
+	} else {
+		matchUpdated := matchHandler.matchService.UpdateMatch(id, changes)
+		w.WriteHeader(http.StatusOK)
+		json.NewEncoder(w).Encode(matchUpdated)
+	}
 }
 
 func (matchHandler *MatchHandler) Delete(w http.ResponseWriter, r *http.Request) {
-
 	id := chi.URLParam(r, "id")
-
 	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
 
+	matchHandler.matchService.DeleteMatch(id)
+
+	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode("deleted id: " + id)
 }
 
-func NewMatchHandler() MatchHandler {
-	return MatchHandler{}
+func NewMatchHandler(ms service.MatchService) MatchHandler {
+	return MatchHandler{
+		matchService: ms,
+	}
 }
