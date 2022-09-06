@@ -32,7 +32,7 @@ jobs:
         go-version: 1.18
     - name: Coverage Report
       env:
-        TEST_COVERAGE_THRESHOLD: 70
+        TEST_COVERAGE_THRESHOLD: 50
       run: |
         make coverage
         TOTAL=$(go tool cover -func=./backend/coverage.out | grep total | grep -Eo '[0-9]+\.[0-9]+')
