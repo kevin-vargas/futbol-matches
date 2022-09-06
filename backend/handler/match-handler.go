@@ -80,6 +80,27 @@ func (matchHandler *MatchHandler) Delete(w http.ResponseWriter, r *http.Request)
 	json.NewEncoder(w).Encode("deleted id: " + id)
 }
 
+func (matchHandler *MatchHandler) AddPlayer(w http.ResponseWriter, r *http.Request) {
+	matchId := chi.URLParam(r, "id")
+	var player model.Player
+	error := json.NewDecoder(r.Body).Decode(&player)
+
+	w.Header().Set("Content-Type", "application/json")
+	if error != nil {
+		http.Error(w, "Error en los datos recibidos "+error.Error(), 400)
+		return
+	} else {
+		added := matchHandler.matchService.AddPlayer(matchId, player)
+		if added {
+			w.WriteHeader(http.StatusOK)
+			json.NewEncoder(w).Encode("Player added")
+		} else {
+			http.Error(w, "El partido ya completó la cantidad de jugadores", 400)
+			return
+		}
+	}
+}
+
 func NewMatchHandler(ms service.MatchService) MatchHandler {
 	return MatchHandler{
 		matchService: ms,
