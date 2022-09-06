@@ -34,6 +34,8 @@ func main() {
 	ha := handler.NewAuth(sa)
 
 	r := chi.NewRouter()
+	ms := service.NewMatchService()
+	mh := handler.NewMatchHandler(ms)
 
 	// global middlewares
 	r.Use(middleware.CountRequest)
@@ -44,7 +46,7 @@ func main() {
 	router.SetupDefaultRoutes(r, metrics.NewHandler())
 	router.SetupAuthRoutes(r, ha)
 	router.SetupHelloRoutes(r, h, middleware.Auth(j))
-
+	router.SetupMatchCrudRoutes(r, mh)
 	err := http.ListenAndServe(cfg.App.Port, r)
 	if err != nil {
 		panic(err)

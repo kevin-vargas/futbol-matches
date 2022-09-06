@@ -10,7 +10,7 @@ metadata:
   name: api-futbol-matches
   namespace: tacs
 spec:
-  replicas: 6
+  replicas: 1
   selector:
     matchLabels:
       app: api-futbol-matches

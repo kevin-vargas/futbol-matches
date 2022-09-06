@@ -27,3 +27,12 @@ func SetupHelloRoutes(r *chi.Mux, h handler.Hello, a middleware.Middleware) {
 		r.Get("/hello/{word}", h.Handle)
 	})
 }
+
+func SetupMatchCrudRoutes(r *chi.Mux, h handler.MatchHandler) {
+	r.Get("/matches", h.GetAll)
+	r.Get("/matches/{id}", h.Get)
+	r.Post("/matches", h.Create)
+	r.Post("/matches/{id}/player", h.AddPlayer)
+	r.Patch("/matches/{id}", h.Update)
+	r.Delete("/matches/{id}", h.Delete)
+}

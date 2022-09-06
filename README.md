@@ -2,7 +2,7 @@
 
 ## Running the project
 
-**Requirements:** golang 1.18 docker
+**Requirements:** golang 1.18 docker 20.10.12
 
 **Start (build included):**
 

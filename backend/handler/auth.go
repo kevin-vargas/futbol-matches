@@ -27,8 +27,6 @@ func (a *Auth) SingUp(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	metrics.RegisteredUsers.Inc()
-	metrics.CreatedMatches.Inc()
-	metrics.AnnotatedUsers.Inc()
 	w.WriteHeader(http.StatusCreated)
 }
 
