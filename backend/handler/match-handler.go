@@ -2,6 +2,7 @@ package handler
 
 import (
 	"backend/model"
+	"backend/pkg/metrics"
 	"backend/service"
 	"encoding/json"
 	"net/http"
@@ -14,7 +15,6 @@ type MatchHandler struct {
 }
 
 func (matchHandler *MatchHandler) Create(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
 
 	var match model.Match
 
@@ -23,21 +23,17 @@ func (matchHandler *MatchHandler) Create(w http.ResponseWriter, r *http.Request)
 	if error != nil {
 		http.Error(w, "Error en los datos recibidos "+error.Error(), 400)
 		return
-	} else {
-		matchCreated := matchHandler.matchService.CreateMatch(match)
-		if matchCreated.Id != "" {
-			w.WriteHeader(http.StatusCreated)
-			json.NewEncoder(w).Encode(matchCreated.Id)
-		} else {
-			w.WriteHeader(http.StatusNotModified)
-		}
 	}
+	matchCreated := matchHandler.matchService.CreateMatch(match)
+	metrics.CreatedMatches.Inc()
+	w.WriteHeader(http.StatusCreated)
+	w.Write([]byte(matchCreated.Id))
+
 }
 
 func (matchHandler *MatchHandler) GetAll(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-
 	json.NewEncoder(w).Encode(matchHandler.matchService.GetAllMatches())
 }
 
@@ -47,11 +43,12 @@ func (matchHandler *MatchHandler) Get(w http.ResponseWriter, r *http.Request) {
 
 	match := matchHandler.matchService.GetMatch(id)
 	if match.Id == "" {
-		w.WriteHeader(http.StatusNoContent)
-	} else {
-		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode(match)
+		w.WriteHeader(http.StatusNotFound)
+		return
 	}
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(match)
+
 }
 
 func (matchHandler *MatchHandler) Update(w http.ResponseWriter, r *http.Request) {
@@ -59,15 +56,15 @@ func (matchHandler *MatchHandler) Update(w http.ResponseWriter, r *http.Request)
 	var changes model.Match
 	error := json.NewDecoder(r.Body).Decode(&changes)
 
-	w.Header().Set("Content-Type", "application/json")
 	if error != nil {
-		http.Error(w, "Error en los datos recibidos "+error.Error(), 400)
+		http.Error(w, "Error en los datos recibidos "+error.Error(), http.StatusBadRequest)
 		return
-	} else {
-		matchUpdated := matchHandler.matchService.UpdateMatch(id, changes)
-		w.WriteHeader(http.StatusOK)
-		json.NewEncoder(w).Encode(matchUpdated)
 	}
+	w.Header().Set("Content-Type", "application/json")
+	matchUpdated := matchHandler.matchService.UpdateMatch(id, changes)
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(matchUpdated)
+
 }
 
 func (matchHandler *MatchHandler) Delete(w http.ResponseWriter, r *http.Request) {
@@ -84,21 +81,19 @@ func (matchHandler *MatchHandler) AddPlayer(w http.ResponseWriter, r *http.Reque
 	matchId := chi.URLParam(r, "id")
 	var player model.Player
 	error := json.NewDecoder(r.Body).Decode(&player)
-
-	w.Header().Set("Content-Type", "application/json")
 	if error != nil {
 		http.Error(w, "Error en los datos recibidos "+error.Error(), 400)
 		return
-	} else {
-		added := matchHandler.matchService.AddPlayer(matchId, player)
-		if added {
-			w.WriteHeader(http.StatusOK)
-			json.NewEncoder(w).Encode("Player added")
-		} else {
-			http.Error(w, "El partido ya completó la cantidad de jugadores", 400)
-			return
-		}
 	}
+	added := matchHandler.matchService.AddPlayer(matchId, player)
+	if added {
+		metrics.AnnotatedUsers.Inc()
+		w.WriteHeader(http.StatusNoContent)
+		return
+	}
+	http.Error(w, "El partido ya completó la cantidad de jugadores", 400)
+	return
+
 }
 
 func NewMatchHandler(ms service.MatchService) MatchHandler {
