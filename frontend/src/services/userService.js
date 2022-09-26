@@ -1,17 +1,16 @@
+import config from '../config/config'
+
 const userService = {
+
+    signup: (user) => {
+        const requestOptions = config.endpoints.signup.requestOptions;
+        requestOptions.body = JSON.stringify(user);
+        const url = `${config.apiHost}${config.endpoints.signup.path}`;
+
+        return fetch(url, requestOptions);
+    },
+
     login: (user, pass) => {
-        let role = 'user';
-        if( pass === 'q1w2e3r4') {
-            role = 'admin';
-        }
-        return Promise.resolve({
-            name: "John Henry",
-            lastname: "Bonham",
-            username: "Bonzo",
-            phone: 123123,
-            email: 'bonzosmotreux@live.com',
-            role: role,
-        });
     }
 }
 

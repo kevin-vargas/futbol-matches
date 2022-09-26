@@ -11,54 +11,51 @@ const UserData = (props) => {
                 <div className="col-md-6">
                     <label className="form-label" htmlFor="firstName">First name</label>
                     <input type="email" id="firstName" name="firstName" className="form-control"
-                    defaultValue={user.name}/>
+                           ref={user.name}
+                    defaultValue={user.name.current}/>
                 </div>
 
                 <div className="col-md-6">
                     <label className="form-label" htmlFor="form2Example1">Last name</label>
                     <input type="email" id="lastName" name="lastName" className="form-control"
-                           defaultValue={user.lastname}/>
-                </div>
-
-                <div className="col-md-9">
-                    <label className="form-label" htmlFor="form2Example1">Avatar</label>
-                    <input type="email" id="avatar" name="avatar" className="form-control" />
-                </div>
-
-                <div className="col-md-3">
-                    <button type="button" className="btn btn-primary upload">Upload</button>
+                           ref={user.lastname}
+                           defaultValue={user.lastname.current}/>
                 </div>
 
                 <div className="col-md-6">
                     <label className="form-label" htmlFor="firstName">User name</label>
                     <input type="email" id="userName" name="userName" className="form-control"
-                           defaultValue={user.username}/>
+                           ref={user.username}
+                           defaultValue={user.username.current}/>
                 </div>
 
                 <div className="col-md-6">
                     <label className="form-label" htmlFor="phone">Phone</label>
                     <input type="email" id="phone" name="phone" className="form-control"
-                           defaultValue={user.phone}/>
+                           ref={user.phone}
+                           defaultValue={user.phone.current}/>
                 </div>
 
                 <div className="col-md-12">
                     <label className="form-label" htmlFor="email">Email</label>
                     <input type="email" id="email" name="email" className="form-control"
-                           defaultValue={user.email}/>
+                           ref={user.email}
+                           defaultValue={user.email.current}/>
                 </div>
 
                 <div className="col-md-12">
                     <label className="form-label" htmlFor="form2Example2">Password</label>
-                    <input type="password" id="form2Example2" className="form-control" />
+                    <input type="password" id="form2Example2" className="form-control"
+                           ref={user.password}/>
                 </div>
                 <div className="col-md-12">
                     <br />
                 </div>
                 <div className="col-md-6">
-                    <button to="/" type="button" className="btn btn-danger" onClick={ props.handleCancel }>Cancel</button>
+                    <button to="/" type="button" className="btn btn-danger" onClick={ e => props.handleCancel }>Cancel</button>
                 </div>
                 <div className="col-md-6">
-                    <button type="button" className="btn btn-success" onClick={ props.handleSave }>Save</button>
+                    <button type="button" className="btn btn-success" onClick={ e => props.handleSave(user) }>Save</button>
                 </div>
             </form>
         </section>

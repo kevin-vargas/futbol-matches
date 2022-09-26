@@ -14,6 +14,7 @@ import (
 	"backend/service/encrypt"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/rs/cors"
 )
 
 func main() {
@@ -47,7 +48,8 @@ func main() {
 	router.SetupAuthRoutes(r, ha)
 	router.SetupHelloRoutes(r, h, middleware.Auth(j))
 	router.SetupMatchCrudRoutes(r, mh)
-	err := http.ListenAndServe(cfg.App.Port, r)
+
+	err := http.ListenAndServe(cfg.App.Port, cors.AllowAll().Handler(r))
 	if err != nil {
 		panic(err)
 	}
