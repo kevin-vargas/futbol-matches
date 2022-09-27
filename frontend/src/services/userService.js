@@ -10,7 +10,12 @@ const userService = {
         return fetch(url, requestOptions);
     },
 
-    login: (user, pass) => {
+    login: (username, password) => {
+        const requestOptions = config.endpoints.login.requestOptions;
+        requestOptions.body = JSON.stringify({username, password});
+        const url = `${config.apiHost}${config.endpoints.login.path}`;
+
+        return fetch(url, requestOptions);
     }
 }
 

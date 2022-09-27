@@ -2,10 +2,13 @@ import React from 'react'
 import {NavLink, useNavigate} from "react-router-dom";
 
 const Menu = (props) => {
+
+    console.log("Menu: ", props.user);
+
     const navigation = useNavigate();
 
     const handleClickProfile = () => {
-        navigation("/profile", {user: props.user});
+        navigation("/profile");
     }
 
     return (

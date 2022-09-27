@@ -2,6 +2,9 @@ import React from 'react'
 import Menu from "../menu/menu";
 
 const Header = (props) => {
+
+    console.log("Header: ", props.user);
+
     return (
         <section className="header">
             <div className="row">

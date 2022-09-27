@@ -1,46 +1,72 @@
 import React, {useRef} from 'react'
 import { useNavigate } from "react-router-dom";
-import UserData from "../userData/userData";
-import userService from "../../services/userService";
 
 const Register = (props) => {
 
     const navigation = useNavigate();
 
-    const user = {};
-    user.name = useRef();
-    user.lastname = useRef();
-    user.username = useRef();
-    user.password = useRef();
-    user.email = useRef();
-    user.phone = useRef();
-
-    const handleSave = (user) => {
-        const userObj = {};
-        userObj.name = user.name.current.value;
-        userObj.lastname = user.lastname.current.value;
-        userObj.username = user.username.current.value;
-        userObj.email = user.email.current.value;
-        userObj.phone = user.phone.current.value;
-        userObj.password = user.password.current.value;
-
-        userService.signup(userObj).then( response => {
-            if( response.status === 201 ){
-                console.log("Usuario Creado con exito!");
-            }
-            else {
-                console.log(`${response.status}: ${response.statusText}`);
-            }
-            navigation("/");
-        }).catch( error => console.log("error: ", error));
-    }
+    const userRef = {};
+    userRef.name = useRef();
+    userRef.lastname = useRef();
+    userRef.username = useRef();
+    userRef.password = useRef();
+    userRef.email = useRef();
+    userRef.phone = useRef();
 
     const handleCancel = () => {
         navigation("/");
     }
 
     return(
-        <UserData handleSave={ handleSave } handleCancel={ handleCancel } user={user} />
+        <section className="container">
+            <form className="login-form rounded row">
+
+                <div className="col-md-6">
+                    <label className="form-label" htmlFor="firstName">First name</label>
+                    <input type="email" id="firstName" name="firstName" className="form-control"
+                               ref={userRef.name}/>
+                </div>
+
+                <div className="col-md-6">
+                    <label className="form-label" htmlFor="form2Example1">Last name</label>
+                    <input type="email" id="lastName" name="lastName" className="form-control"
+                           ref={userRef.lastname}/>
+                </div>
+
+                <div className="col-md-6">
+                    <label className="form-label" htmlFor="firstName">User name</label>
+                    <input type="email" id="userName" name="userName" className="form-control"
+                           ref={userRef.username}/>
+                </div>
+
+                <div className="col-md-6">
+                    <label className="form-label" htmlFor="phone">Phone</label>
+                    <input type="email" id="phone" name="phone" className="form-control"
+                           ref={userRef.phone}/>
+                </div>
+
+                <div className="col-md-12">
+                    <label className="form-label" htmlFor="email">Email</label>
+                    <input type="email" id="email" name="email" className="form-control"
+                           ref={userRef.email}/>
+                </div>
+
+                <div className="col-md-12">
+                    <label className="form-label" htmlFor="form2Example2">Password</label>
+                    <input type="password" id="form2Example2" className="form-control"
+                           ref={userRef.password} />
+                </div>
+                <div className="col-md-12">
+                    <br />
+                </div>
+                <div className="col-md-6">
+                    <button to="/" type="button" className="btn btn-danger" onClick={ e => handleCancel }>Cancel</button>
+                </div>
+                <div className="col-md-6">
+                    <button type="button" className="btn btn-success" onClick={ e => props.handleRegistration(userRef) }>Save</button>
+                </div>
+            </form>
+        </section>
     )
 }
 

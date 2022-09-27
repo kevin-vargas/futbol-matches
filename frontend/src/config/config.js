@@ -6,9 +6,16 @@ const config = {
             requestOptions: {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'}
-                }
             }
         },
+        login: {
+            path: 'login',
+            requestOptions: {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'}
+            }
+        }
+    }
 }
 
 export default config;

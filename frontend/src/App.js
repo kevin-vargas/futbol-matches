@@ -16,7 +16,9 @@ import Statistics from "./components/statistics/statistics";
 
 function App() {
     const [currentUser, setUser ] = useState(undefined);
+
     const navigation = useNavigate();
+
     const username = useRef();
     const password = useRef();
 
@@ -27,10 +29,35 @@ function App() {
         if( !user ) return;
         if( !pass ) return;
 
-        userService.login(user, pass).then((response) => {
-                    setUser(response);
-                    navigation("/principal")
-            });
+
+
+        userService.login(user, pass).then((response) => response.json())
+            .then( responseJson => {
+                setUser(responseJson);
+                navigation("/principal")
+            }).catch(error => console.log(error));
+    }
+
+    const handleRegistration = ( user ) => {
+        const userObj = {};
+        userObj.name = user.name.current.value;
+        userObj.lastname = user.lastname.current.value;
+        userObj.username = user.username.current.value;
+        userObj.email = user.email.current.value;
+        userObj.phone = user.phone.current.value;
+        userObj.password = user.password.current.value;
+
+        userService.signup(userObj).then( response => {
+            if( response.status === 201 ){
+                console.log("Usuario Creado con exito!");
+                setUser(userObj);
+                navigation("/principal")
+            }
+            else {
+                console.log(`${response.status}: ${response.statusText}`);
+                navigation("/");
+            }
+        }).catch( error => console.log("error: ", error));
     }
 
     const closeSession = () =>{
@@ -43,9 +70,9 @@ function App() {
             <Header closeSession={closeSession} user={currentUser}/>
             <Routes>
                 <Route path="/" element={<Login handleLogin={handleLogin} userName={username} password={password} />} />
-                <Route path="/register" element={<Register />} />
+                <Route path="/register" element={<Register handleRegistration={handleRegistration}/>} />
                 <Route path="/profile" element={<Profile user={currentUser}/>} />
-                <Route path="/principal" element={<Principal />} />
+                <Route path="/principal" element={<Principal user={currentUser}/>} />
                 <Route path="/create-match" element={<CreateMatch user={currentUser} />} />
                 <Route path="/statistics" element={<Statistics />} />
                 <Route path="*" element={<Error />} />
