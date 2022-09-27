@@ -1,64 +1,27 @@
-
-const matches = [{
-    id: 'match 1',
-    description: "match between friends",
-    finished: false,
-    date: '2022/09/30',
-    time: '21:00',
-    place: 'Club Ciudad de Buenos Aires, Av del Libertador',
-    format: 8,
-    price: 100,
-    maxPlayers: 20,
-    startingPlayers: [],
-    substitutePlayer: []
-},
-    {
-        id: 'match 2',
-        description: "match between friends",
-        finished: false,
-        date: '2022/09/30',
-        time: '21:00',
-        place: 'Club Ciudad de Buenos Aires, Av del Libertador',
-        format: 8,
-        price: 100,
-        maxPlayers: 20,
-        startingPlayers: [],
-        substitutePlayer: []
-    },
-    {
-        id: 'match 3',
-        description: "match between friends",
-        finished: false,
-        date: '2022/09/30',
-        time: '21:00',
-        place: 'Club Ciudad de Buenos Aires, Av del Libertador',
-        format: 8,
-        price: 100,
-        maxPlayers: 20,
-        startingPlayers: [],
-        substitutePlayer: []
-    },
-    {
-        id: 'match 4',
-        description: "match between friends",
-        finished: false,
-        date: '2022/09/30',
-        time: '21:00',
-        place: 'Club Ciudad de Buenos Aires, Av del Libertador',
-        format: 8,
-        price: 100,
-        maxPlayers: 20,
-        startingPlayers: [],
-        substitutePlayer: []
-    }];
+import config from "../config/config";
 
 const matchService = {
     getMatches: () => {
-        return matches;
+        const url = `${config.apiHost}${config.endpoints.getMatches.path}`
+        return fetch(url);
     },
-    saveMatch(match) {
-       matches.push(match);
-       console.log("match saved")
+
+    saveMatch: (match) => {
+        console.log(match)
+        const matchObj = {};
+        matchObj.owner = match.owner.current.value;
+        matchObj.place = match.place.current.value;
+        matchObj.date = match.date.current.value+'T00:00:00Z';
+        matchObj.time = match.time.current.value;
+        matchObj.format = parseInt(match.format.current.value);
+        matchObj.maxPlayers = parseInt(match.maxplayers.current.value);
+
+        const requestOptions = config.endpoints.saveMatch.requestOptions;
+        requestOptions.body = JSON.stringify(matchObj);
+
+        const url = `${config.apiHost}${config.endpoints.saveMatch.path}`;
+
+        return fetch(url, requestOptions);
     }
 }
 

@@ -29,8 +29,6 @@ function App() {
         if( !user ) return;
         if( !pass ) return;
 
-
-
         userService.login(user, pass).then((response) => response.json())
             .then( responseJson => {
                 setUser(responseJson);
@@ -51,6 +49,7 @@ function App() {
             if( response.status === 201 ){
                 console.log("Usuario Creado con exito!");
                 setUser(userObj);
+                localStorage.setItem("user", JSON.stringify(userObj));
                 navigation("/principal")
             }
             else {

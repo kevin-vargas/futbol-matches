@@ -4,6 +4,14 @@ import Menu from "../menu/menu";
 const Header = (props) => {
 
     console.log("Header: ", props.user);
+    let user = {};
+
+    if( !props.user ){
+        user = JSON.parse(localStorage.getItem("user"));
+    }
+    else {
+        user = props.user;
+    }
 
     return (
         <section className="header">
@@ -12,15 +20,15 @@ const Header = (props) => {
                     FUTBOL MATCHES
                 </div>
 
-                { props.user ?
+                { user ?
                     <div className="col-md-6 text-align-right">
                         AVATAR
                     </div> : ''
                 }
 
-                { props.user ?
+                { user ?
                     <div className="col-md-12">
-                        <Menu handleCloseSession={props.closeSession} user={props.user}/>
+                        <Menu handleCloseSession={props.closeSession} user={user}/>
                     </div>
                     : ''
                 }

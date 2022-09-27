@@ -1,7 +1,9 @@
 import React from "react"
-import { NavLink } from "react-router-dom";
+import {NavLink, useNavigate} from "react-router-dom";
 
 const Login = (props) => {
+
+    localStorage.clear();
 
     return (
         <section className="container login">

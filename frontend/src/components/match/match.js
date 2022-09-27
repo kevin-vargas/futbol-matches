@@ -6,7 +6,7 @@ const Match = (props) => {
 
     return (
         <div className="row match-card rounded">
-            <div className="col-md-3">Owner: {props.match.id}</div>
+            <div className="col-md-3">Owner: {props.match.owner}</div>
             <div className="col-md-6">Place: {props.match.place}</div>
             <div className="col-md-3">Remaining Players: { remaining }</div>
 

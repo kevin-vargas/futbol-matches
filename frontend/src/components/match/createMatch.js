@@ -11,9 +11,22 @@ const CreateMatch = (props) => {
 
     match.owner = useRef();
     match.date = useRef();
+    match.place = useRef();
+    match.time = useRef();
+    match.format = useRef();
+    match.maxplayers = useRef();
+    match.price = useRef();
 
     const handleSaveMatch = (match) => {
-        matchService.saveMatch(match);
+        matchService.saveMatch(match).then(response => {
+           if(response.status === 201) {
+               console.log("Partido creado");
+           }
+           else {
+               console.log("Error al crear el partido");
+           }
+            navigation("/principal")
+        });
     }
 
     return (
@@ -27,7 +40,8 @@ const CreateMatch = (props) => {
 
                 <div className="col-md-12">
                     <label className="form-label" htmlFor="place">Place</label>
-                    <input type="email" id="place" name="place" className="form-control"/>
+                    <input type="email" id="place" name="place" className="form-control"
+                           defaultValue="" ref={match.place}/>
                 </div>
 
                 <div className="col-md-6">
@@ -37,22 +51,26 @@ const CreateMatch = (props) => {
 
                 <div className="col-md-6">
                     <label className="form-label" htmlFor="time">Hour</label>
-                    <input type="email" id="time" name="time" className="form-control" />
+                    <input type="email" id="time" name="time" className="form-control"
+                           ref={match.time}/>
                 </div>
 
                 <div className="col-md-6">
                     <label className="form-label" htmlFor="matchType">Match type</label>
-                    <input type="email" id="matchType" name="matchType" className="form-control" />
+                    <input type="email" id="matchType" name="matchType" className="form-control"
+                    ref={match.format}/>
                 </div>
 
                 <div className="col-md-6">
                     <label className="form-label" htmlFor="maxplayers">Max players</label>
-                    <input type="email" id="maxplayers" name="maxplayers" className="form-control" />
+                    <input type="email" id="maxplayers" name="maxplayers" className="form-control"
+                    ref={match.maxplayers}/>
                 </div>
 
                 <div className="col-md-6">
                     <label className="form-label" htmlFor="price">Price per player</label>
-                    <input type="email" id="price" name="price" className="form-control" />
+                    <input type="email" id="price" name="price" className="form-control"
+                           ref={match.price}/>
                 </div>
 
                 <div className="col-md-6"></div>

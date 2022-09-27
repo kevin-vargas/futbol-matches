@@ -14,6 +14,20 @@ const config = {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'}
             }
+        },
+        saveMatch: {
+            path: 'matches',
+            requestOptions: {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'}
+            }
+        },
+        getMatches: {
+            path: 'matches',
+            requestOptions: {
+                method: 'GET',
+                headers: {'Content-Type': 'application/json'}
+            }
         }
     }
 }

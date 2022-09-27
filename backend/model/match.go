@@ -11,6 +11,7 @@ type Match struct {
 	Place            string    `bson:"place" json:"place"`
 	Format           int       `bson:"format" json:"format"`
 	MaxPlayers       int       `bson:"maxPlayers" json:"maxPlayers"`
+	Price            int       `bson:"price" json:"price"`
 	StartingPlayers  []Player  `bson:"startingPlayers" json:"startingPlayers"`
 	SubstitutePlayer []Player  `bson:"substitutePlayer" json:"substitutePlayer"`
 }
