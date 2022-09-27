@@ -1,5 +1,16 @@
 version: "3"
 services: 
+  bot:
+    environment:
+      - PROMETHEUS_URI=http://prometheus:9090
+      - BACKEND_URI=http://backend:8080
+      - API_TOKEN=
+    container_name: bot-futbol-matches
+    build: ./bot
+    image: bot-futbol-matches:latest
+    pull_policy: build
+    networks:
+      - bot
   backend:
     container_name: api-futbol-matches
     build: ./backend
@@ -8,7 +19,8 @@ services:
     ports:
       - "8080:8080"
     networks:
-      - docker-service
+      - backend
+      - bot
   prometheus:
     container_name: prometheus
     image: prom/prometheus:latest
@@ -17,7 +29,8 @@ services:
     ports:
       - 9090:9090
     networks:
-      - docker-service
+      - backend
+      - bot
   grafana:
     container_name: grafana
     image: grafana/grafana:latest
@@ -28,8 +41,10 @@ services:
     ports:
       - 3000:3000
     networks:
-      - docker-service
+      - backend
 
 networks:
-  docker-service:
+  backend:
+    driver: bridge
+  bot:
     driver: bridge
