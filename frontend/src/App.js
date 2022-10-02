@@ -16,6 +16,7 @@ import Statistics from "./components/statistics/statistics";
 
 function App() {
     const [currentUser, setUser ] = useState(undefined);
+    const [token, setToken ] = useState({});
 
     const navigation = useNavigate();
 
@@ -29,7 +30,10 @@ function App() {
         if( !user ) return;
         if( !pass ) return;
 
-        userService.login(user, pass).then((response) => response.json())
+        userService.login(user, pass).then((response) => {
+            console.log(response.headers);
+            return response.json();
+        })
             .then( responseJson => {
                 setUser(responseJson);
                 navigation("/principal")
@@ -61,6 +65,7 @@ function App() {
 
     const closeSession = () =>{
         setUser(false);
+        localStorage.clear();
         navigation("/");
     }
 

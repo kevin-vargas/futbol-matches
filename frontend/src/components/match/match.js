@@ -10,7 +10,7 @@ const Match = (props) => {
             <div className="col-md-6">Place: {props.match.place}</div>
             <div className="col-md-3">Remaining Players: { remaining }</div>
 
-            <div className="col-md-3">Date: {props.match.date}</div>
+            <div className="col-md-3">Date: {props.match.date.split("T")[0]}</div>
             <div className="col-md-3">Hour: {props.match.time}</div>
             <div className="col-md-3">Price: ${props.match.price}</div>
             <div className="col-md-3">

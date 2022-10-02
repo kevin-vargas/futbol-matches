@@ -15,6 +15,13 @@ const config = {
                 headers: {'Content-Type': 'application/json'}
             }
         },
+        updateUser: {
+            path: 'login',
+            requestOptions: {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'}
+            }
+        },
         saveMatch: {
             path: 'matches',
             requestOptions: {

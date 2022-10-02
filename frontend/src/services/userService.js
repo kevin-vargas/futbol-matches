@@ -16,7 +16,15 @@ const userService = {
         const url = `${config.apiHost}${config.endpoints.login.path}`;
 
         return fetch(url, requestOptions);
+    },
+    update: (user) => {
+        const requestOptions = config.endpoints.updateUser.requestOptions;
+        requestOptions.body = JSON.stringify(user);
+        const url = `${config.apiHost}${config.endpoints.updateUser.path}`;
+
+        return fetch(url, requestOptions);
     }
+
 }
 
 export default userService;

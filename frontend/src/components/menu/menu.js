@@ -30,10 +30,7 @@ const Menu = (props) => {
 
                 </div>
                 <div className="col-md-2 text-align-right">
-                    <button className="btn" onClick={ props.handleCloseSession }> Salir </button>
-                </div>
-                <div className="col-md-2 text-align-right">
-                    <button className="btn" onClick={ handleClickProfile }> Mi Perfil </button>
+                    <button className="btn" onClick={ props.handleCloseSession }> Logout </button>
                 </div>
             </div>
         </section>

@@ -1,5 +1,6 @@
 import React from 'react';
 import {useNavigate} from "react-router-dom";
+import userService from "../../services/userService";
 
 const Profile = (props) => {
     const navigation = useNavigate();
@@ -9,6 +10,9 @@ const Profile = (props) => {
 
     const handleSave = (user) => {
         console.log("SAVE: ", user);
+        userService.update(user)
+            .then( response => console.log("User Updated"))
+            .catch( error => console.log("ERROR"));
         navigation("/principal");
     }
 

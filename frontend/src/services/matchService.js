@@ -13,6 +13,7 @@ const matchService = {
         matchObj.place = match.place.current.value;
         matchObj.date = match.date.current.value+'T00:00:00Z';
         matchObj.time = match.time.current.value;
+        matchObj.price = parseInt(match.price.current.value);
         matchObj.format = parseInt(match.format.current.value);
         matchObj.maxPlayers = parseInt(match.maxplayers.current.value);
 

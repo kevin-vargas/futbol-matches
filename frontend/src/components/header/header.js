@@ -21,12 +21,6 @@ const Header = (props) => {
                 </div>
 
                 { user ?
-                    <div className="col-md-6 text-align-right">
-                        AVATAR
-                    </div> : ''
-                }
-
-                { user ?
                     <div className="col-md-12">
                         <Menu handleCloseSession={props.closeSession} user={user}/>
                     </div>

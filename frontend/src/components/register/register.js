@@ -60,7 +60,7 @@ const Register = (props) => {
                     <br />
                 </div>
                 <div className="col-md-6">
-                    <button to="/" type="button" className="btn btn-danger" onClick={ e => handleCancel }>Cancel</button>
+                    <button type="button" className="btn btn-danger" onClick={ handleCancel }>Cancel</button>
                 </div>
                 <div className="col-md-6">
                     <button type="button" className="btn btn-success" onClick={ e => props.handleRegistration(userRef) }>Save</button>
