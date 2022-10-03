@@ -13,5 +13,10 @@ func New() Config {
 			Token:    os.Getenv(env_jwt_token),
 			Duration: jwt_duration,
 		},
+		DB: DB{
+			Host:     db_host,
+			Port:     db_port,
+			Database: db_database,
+		},
 	}
 }

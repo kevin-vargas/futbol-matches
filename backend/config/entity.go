@@ -11,7 +11,14 @@ type JWT struct {
 	Duration time.Duration
 }
 
+type DB struct {
+	Host     string
+	Port     string
+	Database string
+}
+
 type Config struct {
 	App App
 	JWT JWT
+	DB  DB
 }

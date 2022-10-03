@@ -2,7 +2,6 @@ package encrypt
 
 import (
 	"backend/service"
-
 	"golang.org/x/crypto/bcrypt"
 )
 
