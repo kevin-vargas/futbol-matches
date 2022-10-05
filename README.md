@@ -50,3 +50,12 @@ The api can be tested on the following domain
     https://api.futbol.fast.ar
 ```
 
+**Bot:**
+
+To talk to the bot simply add it to telegram and send the next message:
+```
+    /comenzar
+```
+<p align="middle">
+<img src="https://i.ibb.co/PFbmmFq/telegram-bot-qr-3.jpg" alt="Futbol Bot QR" width="200"/>
+</p>
