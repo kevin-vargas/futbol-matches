@@ -3,7 +3,7 @@ package model
 import "time"
 
 type Match struct {
-	Id               string    `bson:"_id" json:"id"`
+	Id               string    `bson:"_id,omitempty" json:"_id,omitempty"`
 	Description      string    `bson:"description" json:"description"`
 	Finished         bool      `bson:"finished" json:"finished"`
 	Date             time.Time `bson:"date" json:"date"`

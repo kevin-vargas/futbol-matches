@@ -3,9 +3,9 @@ package match
 import (
 	"backend/model"
 	h "backend/repository/helper"
-	"errors"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"log"
 	"time"
 )
 
@@ -36,8 +36,10 @@ func (mr *MatchRepository) GetMatch(id string) model.Match {
 	matchColl := h.GetCollection("matches")
 	var match model.Match
 
+	newID, _ := primitive.ObjectIDFromHex(id)
+
 	condition := bson.M{
-		"_id": primitive.ObjectIDFromHex(id),
+		"_id": newID,
 	}
 
 	err := matchColl.FindOne(h.GetContext(), condition).Decode(&match)
@@ -50,20 +52,18 @@ func (mr *MatchRepository) GetMatch(id string) model.Match {
 }
 
 func (mr *MatchRepository) CreateMatch(match model.Match) (string, error) {
-	existMatch := mr.GetMatch(match.Id)
-
-	if existMatch.Id != "" {
-		return "", errors.New("The match already exist!")
-	}
 
 	matchesColl := h.GetCollection("matches")
 
 	match.CreatedAt = time.Now()
 	result, err := matchesColl.InsertOne(h.GetContext(), match)
 
+	if err != nil {
+		log.Fatal(err)
+		return "", err
+	}
 	ObjID, _ := result.InsertedID.(primitive.ObjectID)
-
-	return ObjID.String(), err
+	return ObjID.String(), nil
 }
 
 func (mr *MatchRepository) UpdateMatch(match model.Match) error {
@@ -87,7 +87,8 @@ func (mr *MatchRepository) UpdateMatch(match model.Match) error {
 		"$set": updateMatch,
 	}
 
-	filter := bson.M{"_id": primitive.ObjectIDFromHex(match.Id)}
+	newId, _ := primitive.ObjectIDFromHex(match.Id)
+	filter := bson.M{"_id": newId}
 
 	_, err := matchColl.UpdateOne(h.GetContext(), filter, updtString)
 
@@ -100,8 +101,9 @@ func (mr *MatchRepository) UpdateMatch(match model.Match) error {
 func (mr *MatchRepository) DeleteMatch(id string) error {
 	matchColl := h.GetCollection("matches")
 
+	newId, _ := primitive.ObjectIDFromHex(id)
 	condition := bson.M{
-		"_id": primitive.ObjectIDFromHex(id),
+		"_id": newId,
 	}
 
 	_, err := matchColl.DeleteOne(h.GetContext(), condition)
