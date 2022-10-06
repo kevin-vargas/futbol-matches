@@ -5,9 +5,11 @@ import (
 	"backend/model"
 	"context"
 	"errors"
+	"fmt"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
+	"log"
 	"time"
 )
 
@@ -22,8 +24,20 @@ func (ur *UserRepository) Create(user model.User) (string, error) {
 	}
 
 	userColl := getCollection("users")
+
+	if userColl == nil {
+		println("USER COLL ES NULL")
+	}
+
 	user.CreatedAt = time.Now()
 	result, err := userColl.InsertOne(getContext(), user)
+
+	if err != nil {
+		println("ERRORRRRR")
+		fmt.Println(err)
+		log.Fatal(err)
+	}
+
 	ObjID, _ := result.InsertedID.(primitive.ObjectID)
 
 	return ObjID.String(), err

@@ -17,6 +17,8 @@ func New() Config {
 			Host:     db_host,
 			Port:     db_port,
 			Database: db_database,
+			User:     db_username,
+			Pass:     db_password,
 		},
 	}
 }

@@ -13,7 +13,13 @@ var Ctx = context.TODO()
 func Setup() *mongo.Client {
 	dbConfig := config.New().DB
 	connectionURI := "mongodb://" + dbConfig.Host + ":" + dbConfig.Port + "/"
-	clientOptions := options.Client().ApplyURI(connectionURI)
+
+	credentials := options.Credential{
+		Username: dbConfig.User,
+		Password: dbConfig.Pass,
+	}
+
+	clientOptions := options.Client().ApplyURI(connectionURI).SetAuth(credentials)
 	client, err := mongo.Connect(Ctx, clientOptions)
 	if err != nil {
 		log.Fatal(err)
