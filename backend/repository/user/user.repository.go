@@ -1,15 +1,11 @@
 package user
 
 import (
-	dbm "backend/database"
 	"backend/model"
-	"context"
+	h "backend/repository/helper"
 	"errors"
-	"fmt"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
-	"go.mongodb.org/mongo-driver/mongo"
-	"log"
 	"time"
 )
 
@@ -23,20 +19,10 @@ func (ur *UserRepository) Create(user model.User) (string, error) {
 		return "", errors.New("The user already exist!")
 	}
 
-	userColl := getCollection("users")
-
-	if userColl == nil {
-		println("USER COLL ES NULL")
-	}
+	userColl := h.GetCollection("users")
 
 	user.CreatedAt = time.Now()
-	result, err := userColl.InsertOne(getContext(), user)
-
-	if err != nil {
-		println("ERRORRRRR")
-		fmt.Println(err)
-		log.Fatal(err)
-	}
+	result, err := userColl.InsertOne(h.GetContext(), user)
 
 	ObjID, _ := result.InsertedID.(primitive.ObjectID)
 
@@ -44,8 +30,8 @@ func (ur *UserRepository) Create(user model.User) (string, error) {
 }
 
 func (ur *UserRepository) GetAll() []model.User {
-	userColl := getCollection("users")
-	cursor, err := userColl.Find(getContext(), bson.M{}, nil)
+	userColl := h.GetCollection("users")
+	cursor, err := userColl.Find(h.GetContext(), bson.M{}, nil)
 
 	var results []model.User
 
@@ -53,7 +39,7 @@ func (ur *UserRepository) GetAll() []model.User {
 		return []model.User{}
 	}
 
-	for cursor.Next(context.TODO()) {
+	for cursor.Next(h.GetContext()) {
 		var user model.User
 		err := cursor.Decode(&user)
 		if err != nil {
@@ -65,14 +51,14 @@ func (ur *UserRepository) GetAll() []model.User {
 }
 
 func (ur *UserRepository) GetByUsername(username string) model.User {
-	userColl := getCollection("users")
+	userColl := h.GetCollection("users")
 	var user model.User
 
 	condition := bson.M{
 		"username": username,
 	}
 
-	err := userColl.FindOne(getContext(), condition).Decode(&user)
+	err := userColl.FindOne(h.GetContext(), condition).Decode(&user)
 
 	if err != nil {
 		return model.User{}
@@ -82,7 +68,7 @@ func (ur *UserRepository) GetByUsername(username string) model.User {
 }
 
 func (ur *UserRepository) GetByUsernameAndPassword(username string, password string) (model.User, error) {
-	userColl := getCollection("users")
+	userColl := h.GetCollection("users")
 	var user model.User
 
 	condition := bson.M{
@@ -90,7 +76,7 @@ func (ur *UserRepository) GetByUsernameAndPassword(username string, password str
 		"password": password,
 	}
 
-	err := userColl.FindOne(getContext(), condition).Decode(&user)
+	err := userColl.FindOne(h.GetContext(), condition).Decode(&user)
 
 	if err != nil {
 		return model.User{}, errors.New("Incorrect username or password")
@@ -100,7 +86,7 @@ func (ur *UserRepository) GetByUsernameAndPassword(username string, password str
 }
 
 func (ur *UserRepository) Update(username string, user model.User) error {
-	userColl := getCollection("users")
+	userColl := h.GetCollection("users")
 
 	updatedUser := make(map[string]interface{})
 
@@ -132,23 +118,7 @@ func (ur *UserRepository) Update(username string, user model.User) error {
 
 	filter := bson.M{"username": bson.M{"$eq": username}}
 
-	_, err := userColl.UpdateOne(getContext(), filter, updtString)
-
-	if err == nil {
-		return err
-	}
-
-	return nil
-}
-
-func (ur *UserRepository) Delete(username string) error {
-	userColl := getCollection("users")
-
-	condition := bson.M{
-		"username": username,
-	}
-
-	_, err := userColl.DeleteOne(getContext(), condition)
+	_, err := userColl.UpdateOne(h.GetContext(), filter, updtString)
 
 	if err != nil {
 		return err
@@ -157,17 +127,20 @@ func (ur *UserRepository) Delete(username string) error {
 	return nil
 }
 
-func getContext() context.Context {
-	ctx, _ := context.WithTimeout(context.Background(), 15*time.Second)
-	return ctx
-}
+func (ur *UserRepository) Delete(username string) error {
+	userColl := h.GetCollection("users")
 
-func getCollection(collectionName string) *mongo.Collection {
+	condition := bson.M{
+		"username": username,
+	}
 
-	dataBaseClient := dbm.Setup()
-	userColl := dataBaseClient.Database("futbol-matches").Collection(collectionName)
+	_, err := userColl.DeleteOne(h.GetContext(), condition)
 
-	return userColl
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func NewUserRepository() UserRepository {

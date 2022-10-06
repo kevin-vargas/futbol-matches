@@ -13,6 +13,8 @@ type Match struct {
 	MaxPlayers       int       `bson:"maxPlayers" json:"maxPlayers"`
 	StartingPlayers  []Player  `bson:"startingPlayers" json:"startingPlayers"`
 	SubstitutePlayer []Player  `bson:"substitutePlayer" json:"substitutePlayer"`
+	CreatedAt        time.Time `bson:"created_At" json:"created_at,omitempty"`
+	UpdatedAt        time.Time `bson:"updated_at" json:"updated_at,omitempty"`
 }
 
 type Player struct {

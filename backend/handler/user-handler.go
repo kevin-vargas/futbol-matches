@@ -55,7 +55,7 @@ func (userHandler *UserHandler) Get(w http.ResponseWriter, r *http.Request) {
 
 	user := userHandler.userService.GetByUsername(username)
 	if user.Username == "" {
-		w.WriteHeader(http.StatusNotFound)
+		w.WriteHeader(http.StatusNoContent)
 		return
 	}
 	w.WriteHeader(http.StatusOK)
@@ -73,10 +73,11 @@ func (userHandler *UserHandler) Update(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.Header().Set("Content-Type", "application/json")
-	userUpdated := userHandler.userService.Update(username, user)
+	err := userHandler.userService.Update(username, user)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+	}
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(userUpdated)
-
 }
 
 func (userHandler *UserHandler) Delete(w http.ResponseWriter, r *http.Request) {

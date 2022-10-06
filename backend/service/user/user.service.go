@@ -11,12 +11,16 @@ func (us *UserService) Create(user model.User) (string, error) {
 
 	if err == nil {
 		user.Password = encryptedPass
-		created, _ := us.userRepo.Create(user)
-		if created != "" {
+		_, createdErr := us.userRepo.Create(user)
+
+		if createdErr != nil {
+			return "", createdErr
+		} else {
 			return us.jwt.Generate(user.Username)
 		}
+	} else {
+		return "", err
 	}
-	return "", err
 }
 
 func (us *UserService) GetAll() []model.User {
@@ -28,7 +32,13 @@ func (us *UserService) GetByUsername(username string) model.User {
 }
 
 func (us *UserService) Update(username string, user model.User) error {
-	return us.userRepo.Update(username, user)
+	encryptedPass, err := us.encrypter.Generate(user.Password)
+
+	if err == nil {
+		user.Password = encryptedPass
+		return us.userRepo.Update(username, user)
+	}
+	return err
 }
 
 func (us *UserService) Delete(username string) error {
