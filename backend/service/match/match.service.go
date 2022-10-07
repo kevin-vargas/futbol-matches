@@ -34,8 +34,8 @@ func (ms *MatchService) UpdateMatch(id string, updates model.Match) error {
 	return ms.repository.UpdateMatch(currentMatch)
 }
 
-func (ms *MatchService) DeleteMatch(id string) {
-	ms.repository.DeleteMatch(id)
+func (ms *MatchService) DeleteMatch(id string) error {
+	return ms.repository.DeleteMatch(id)
 }
 
 func (ms *MatchService) AddPlayer(matchId string, player model.Player) bool {

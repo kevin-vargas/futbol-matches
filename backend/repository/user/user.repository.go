@@ -128,6 +128,13 @@ func (ur *UserRepository) Update(username string, user model.User) error {
 }
 
 func (ur *UserRepository) Delete(username string) error {
+
+	existUser := ur.GetByUsername(username)
+
+	if existUser.Username == "" {
+		return errors.New("User does not exists")
+	}
+
 	userColl := h.GetCollection("users")
 
 	condition := bson.M{

@@ -4,6 +4,7 @@ import (
 	"backend/model"
 	ur "backend/repository/user"
 	"backend/service"
+	"errors"
 )
 
 func (us *UserService) Create(user model.User) (string, error) {
@@ -32,6 +33,13 @@ func (us *UserService) GetByUsername(username string) model.User {
 }
 
 func (us *UserService) Update(username string, user model.User) error {
+
+	existUser := us.GetByUsername(username)
+
+	if existUser.Username == "" {
+		return errors.New("User does not exists.")
+	}
+
 	encryptedPass, err := us.encrypter.Generate(user.Password)
 
 	if err == nil {

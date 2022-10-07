@@ -93,12 +93,13 @@ func (matchHandler *MatchHandler) AddPlayer(w http.ResponseWriter, r *http.Reque
 	added := matchHandler.matchService.AddPlayer(matchId, player)
 	if added {
 		metrics.AnnotatedUsers.Inc()
-		w.WriteHeader(http.StatusNoContent)
+		w.WriteHeader(http.StatusOK)
+		return
+	} else {
+		w.WriteHeader(http.StatusConflict)
+		http.Error(w, "El partido ya completó la cantidad de jugadores", 400)
 		return
 	}
-	http.Error(w, "El partido ya completó la cantidad de jugadores", 400)
-	return
-
 }
 
 func NewMatchHandler(ms ms.MatchService) MatchHandler {

@@ -4,6 +4,7 @@ import "time"
 
 type Match struct {
 	Id               string    `bson:"_id,omitempty" json:"_id,omitempty"`
+	Owner            string    `bson:"owner" json:"owner"`
 	Description      string    `bson:"description" json:"description"`
 	Finished         bool      `bson:"finished" json:"finished"`
 	Date             time.Time `bson:"date" json:"date"`

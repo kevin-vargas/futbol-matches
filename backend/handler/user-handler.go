@@ -89,10 +89,11 @@ func (userHandler *UserHandler) Delete(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		w.WriteHeader(http.StatusConflict)
 		json.NewEncoder(w).Encode(err)
+	} else {
+		w.WriteHeader(http.StatusOK)
+		json.NewEncoder(w).Encode("deleted user: " + username)
 	}
 
-	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode("deleted user: " + username)
 }
 
 func NewUserHandler(us us.UserService) UserHandler {
