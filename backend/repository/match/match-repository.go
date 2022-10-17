@@ -6,6 +6,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"log"
+	"strings"
 	"time"
 )
 
@@ -71,7 +72,10 @@ func (mr *MatchRepository) CreateMatch(match model.Match) (string, error) {
 	}
 	ObjID, _ := result.InsertedID.(primitive.ObjectID)
 	mongoClient.Disconnect(h.GetContext())
-	return ObjID.String(), nil
+
+	strAux := strings.Replace(ObjID.String(), "ObjectID(\"", "", 1)
+
+	return strings.Replace(strAux, "\")", "", 1), nil
 }
 
 func (mr *MatchRepository) UpdateMatch(match model.Match) error {
