@@ -12,12 +12,14 @@ import (
 type MatchRepository struct{}
 
 func (mr *MatchRepository) GetAllMatches() []model.Match {
-	userColl := h.GetCollection("matches")
+	mongoClient := h.GetConnection()
+	userColl := h.GetCollection(mongoClient, "matches")
 	cursor, err := userColl.Find(h.GetContext(), bson.M{}, nil)
 
 	var results []model.Match
 
 	if err != nil {
+		mongoClient.Disconnect(h.GetContext())
 		return []model.Match{}
 	}
 
@@ -29,11 +31,13 @@ func (mr *MatchRepository) GetAllMatches() []model.Match {
 		}
 		results = append(results, match)
 	}
+	mongoClient.Disconnect(h.GetContext())
 	return results
 }
 
 func (mr *MatchRepository) GetMatch(id string) model.Match {
-	matchColl := h.GetCollection("matches")
+	mongoClient := h.GetConnection()
+	matchColl := h.GetCollection(mongoClient, "matches")
 	var match model.Match
 
 	newID, _ := primitive.ObjectIDFromHex(id)
@@ -45,29 +49,34 @@ func (mr *MatchRepository) GetMatch(id string) model.Match {
 	err := matchColl.FindOne(h.GetContext(), condition).Decode(&match)
 
 	if err != nil {
+		mongoClient.Disconnect(h.GetContext())
 		return model.Match{}
 	}
 
+	mongoClient.Disconnect(h.GetContext())
 	return match
 }
 
 func (mr *MatchRepository) CreateMatch(match model.Match) (string, error) {
-
-	matchesColl := h.GetCollection("matches")
+	mongoClient := h.GetConnection()
+	matchesColl := h.GetCollection(mongoClient, "matches")
 
 	match.CreatedAt = time.Now()
 	result, err := matchesColl.InsertOne(h.GetContext(), match)
 
 	if err != nil {
 		log.Fatal(err)
+		mongoClient.Disconnect(h.GetContext())
 		return "", err
 	}
 	ObjID, _ := result.InsertedID.(primitive.ObjectID)
+	mongoClient.Disconnect(h.GetContext())
 	return ObjID.String(), nil
 }
 
 func (mr *MatchRepository) UpdateMatch(match model.Match) error {
-	matchColl := h.GetCollection("matches")
+	mongoClient := h.GetConnection()
+	matchColl := h.GetCollection(mongoClient, "matches")
 
 	updateMatch := make(map[string]interface{})
 
@@ -91,15 +100,17 @@ func (mr *MatchRepository) UpdateMatch(match model.Match) error {
 	filter := bson.M{"_id": newId}
 
 	_, err := matchColl.UpdateOne(h.GetContext(), filter, updtString)
-
+	mongoClient.Disconnect(h.GetContext())
 	if err != nil {
+
 		return err
 	}
 	return nil
 }
 
 func (mr *MatchRepository) DeleteMatch(id string) error {
-	matchColl := h.GetCollection("matches")
+	mongoClient := h.GetConnection()
+	matchColl := h.GetCollection(mongoClient, "matches")
 
 	newId, _ := primitive.ObjectIDFromHex(id)
 	condition := bson.M{
@@ -108,6 +119,7 @@ func (mr *MatchRepository) DeleteMatch(id string) error {
 
 	_, err := matchColl.DeleteOne(h.GetContext(), condition)
 
+	mongoClient.Disconnect(h.GetContext())
 	if err != nil {
 		return err
 	}

@@ -7,15 +7,17 @@ import (
 	"time"
 )
 
+func GetConnection() *mongo.Client {
+	return dbm.Setup()
+}
+
 func GetContext() context.Context {
 	ctx, _ := context.WithTimeout(context.Background(), 15*time.Second)
 	return ctx
 }
 
-func GetCollection(collectionName string) *mongo.Collection {
+func GetCollection(client *mongo.Client, collectionName string) *mongo.Collection {
 
-	dataBaseClient := dbm.Setup()
-	userColl := dataBaseClient.Database("futbol-matches").Collection(collectionName)
-
+	userColl := client.Database("futbol-matches").Collection(collectionName)
 	return userColl
 }

@@ -19,39 +19,47 @@ func (ur *UserRepository) Create(user model.User) (string, error) {
 		return "", errors.New("The user already exist!")
 	}
 
-	userColl := h.GetCollection("users")
+	mongoClient := h.GetConnection()
+	userColl := h.GetCollection(mongoClient, "users")
 
 	user.CreatedAt = time.Now()
 	result, err := userColl.InsertOne(h.GetContext(), user)
 
 	ObjID, _ := result.InsertedID.(primitive.ObjectID)
 
+	mongoClient.Disconnect(h.GetContext())
+
 	return ObjID.String(), err
 }
 
 func (ur *UserRepository) GetAll() []model.User {
-	userColl := h.GetCollection("users")
+	mongoClient := h.GetConnection()
+	userColl := h.GetCollection(mongoClient, "users")
 	cursor, err := userColl.Find(h.GetContext(), bson.M{}, nil)
 
 	var results []model.User
 
 	if err != nil {
+		mongoClient.Disconnect(h.GetContext())
 		return []model.User{}
 	}
 
 	for cursor.Next(h.GetContext()) {
 		var user model.User
 		err := cursor.Decode(&user)
+
 		if err != nil {
 			return results
 		}
 		results = append(results, user)
 	}
+	mongoClient.Disconnect(h.GetContext())
 	return results
 }
 
 func (ur *UserRepository) GetByUsername(username string) model.User {
-	userColl := h.GetCollection("users")
+	mongoClient := h.GetConnection()
+	userColl := h.GetCollection(mongoClient, "users")
 	var user model.User
 
 	condition := bson.M{
@@ -60,6 +68,7 @@ func (ur *UserRepository) GetByUsername(username string) model.User {
 
 	err := userColl.FindOne(h.GetContext(), condition).Decode(&user)
 
+	mongoClient.Disconnect(h.GetContext())
 	if err != nil {
 		return model.User{}
 	}
@@ -68,7 +77,8 @@ func (ur *UserRepository) GetByUsername(username string) model.User {
 }
 
 func (ur *UserRepository) GetByUsernameAndPassword(username string, password string) (model.User, error) {
-	userColl := h.GetCollection("users")
+	mongoClient := h.GetConnection()
+	userColl := h.GetCollection(mongoClient, "users")
 	var user model.User
 
 	condition := bson.M{
@@ -78,15 +88,16 @@ func (ur *UserRepository) GetByUsernameAndPassword(username string, password str
 
 	err := userColl.FindOne(h.GetContext(), condition).Decode(&user)
 
+	mongoClient.Disconnect(h.GetContext())
 	if err != nil {
 		return model.User{}, errors.New("Incorrect username or password")
 	}
-
 	return user, nil
 }
 
 func (ur *UserRepository) Update(username string, user model.User) error {
-	userColl := h.GetCollection("users")
+	mongoClient := h.GetConnection()
+	userColl := h.GetCollection(mongoClient, "users")
 
 	updatedUser := make(map[string]interface{})
 
@@ -120,6 +131,8 @@ func (ur *UserRepository) Update(username string, user model.User) error {
 
 	_, err := userColl.UpdateOne(h.GetContext(), filter, updtString)
 
+	mongoClient.Disconnect(h.GetContext())
+
 	if err != nil {
 		return err
 	}
@@ -135,13 +148,16 @@ func (ur *UserRepository) Delete(username string) error {
 		return errors.New("User does not exists")
 	}
 
-	userColl := h.GetCollection("users")
+	mongoClient := h.GetConnection()
+	userColl := h.GetCollection(mongoClient, "users")
 
 	condition := bson.M{
 		"username": username,
 	}
 
 	_, err := userColl.DeleteOne(h.GetContext(), condition)
+
+	mongoClient.Disconnect(h.GetContext())
 
 	if err != nil {
 		return err

@@ -4,7 +4,7 @@ services:
     environment:
       - PROMETHEUS_URI=http://prometheus:9090
       - BACKEND_URI=http://backend:8080
-      - API_TOKEN=
+      - API_TOKEN=5457507980:AAFt2socx0JBksVFsbMmdizg6yGP9pxLi2k
     container_name: bot-futbol-matches
     build: ./bot
     image: bot-futbol-matches:latest
