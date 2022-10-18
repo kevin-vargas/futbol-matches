@@ -2,6 +2,7 @@ package main
 
 import (
 	mr "backend/repository/match"
+	"fmt"
 	"net/http"
 
 	"backend/config"
@@ -14,6 +15,7 @@ import (
 	"backend/service/encrypt"
 	ms "backend/service/match"
 	us "backend/service/user"
+
 	"github.com/go-chi/chi/v5"
 )
 
@@ -21,7 +23,7 @@ func main() {
 	// config
 	metrics.Register()
 	cfg := config.New()
-
+	fmt.Println(cfg)
 	// repositories
 	userRepository := ur.NewUserRepository()
 	matchRepository := mr.NewMatchRepository()

@@ -2,16 +2,19 @@ version: "3"
 services: 
   bot:
     environment:
-      - PROMETHEUS_URI=http://prometheus:9090
-      - BACKEND_URI=http://backend:8080
-      - API_TOKEN=
+      BACKEND_URI: http://backend:8080
+      API_TOKEN: ${API_TOKEN}
     container_name: bot-futbol-matches
     build: ./bot
     image: bot-futbol-matches:latest
     pull_policy: build
     networks:
-      - bot
+      - public
   backend:
+    environment:
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_HOST: db-futbol-matches
     container_name: api-futbol-matches
     build: ./backend
     image: be-futbol-matches:latest
@@ -20,42 +23,20 @@ services:
       - "8080:8080"
     networks:
       - backend
-      - bot
-  prometheus:
-    container_name: prometheus
-    image: prom/prometheus:latest
-    volumes:
-            - ./metrics/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
-    ports:
-      - 9090:9090
-    networks:
-      - backend
-      - bot
-  grafana:
-    container_name: grafana
-    image: grafana/grafana:latest
-    volumes:
-            - ./metrics/grafana/grafana.ini:/etc/grafana/grafana.ini
-            - ./metrics/grafana/datasource.yml:/etc/grafana/provisioning/datasources/datasource.yaml
-            - ./metrics/grafana/data:/var/lib/grafana
-    ports:
-      - 3000:3000
-    networks:
-      - backend
+      - public
   mongo:
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${DB_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${DB_PASSWORD}
     container_name: db-futbol-matches
     image: mongo:latest
     restart: always
     ports:
       - "27017:27017"
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: q1w2e3r4
     networks:
       - backend
-
 networks:
   backend:
     driver: bridge
-  bot:
+  public:
     driver: bridge
