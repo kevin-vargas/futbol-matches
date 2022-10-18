@@ -3,7 +3,8 @@ package model
 import "time"
 
 type Match struct {
-	Id               string    `bson:"_id" json:"id"`
+	Id               string    `bson:"_id,omitempty" json:"_id,omitempty"`
+	Owner            string    `bson:"owner" json:"owner"`
 	Description      string    `bson:"description" json:"description"`
 	Finished         bool      `bson:"finished" json:"finished"`
 	Date             time.Time `bson:"date" json:"date"`
@@ -13,6 +14,8 @@ type Match struct {
 	MaxPlayers       int       `bson:"maxPlayers" json:"maxPlayers"`
 	StartingPlayers  []Player  `bson:"startingPlayers" json:"startingPlayers"`
 	SubstitutePlayer []Player  `bson:"substitutePlayer" json:"substitutePlayer"`
+	CreatedAt        time.Time `bson:"created_At" json:"created_at,omitempty"`
+	UpdatedAt        time.Time `bson:"updated_at" json:"updated_at,omitempty"`
 }
 
 type Player struct {

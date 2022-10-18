@@ -28,6 +28,13 @@ var CreatedMatches = prometheus.NewCounter(
 	},
 )
 
+var CreatedUsers = prometheus.NewCounter(
+	prometheus.CounterOpts{
+		Name: "created_users",
+		Help: "Number of Created Users",
+	},
+)
+
 var RegisteredUsers = prometheus.NewCounter(
 	prometheus.CounterOpts{
 		Name: "registered_users",

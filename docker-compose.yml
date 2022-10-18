@@ -42,6 +42,17 @@ services:
       - 3000:3000
     networks:
       - backend
+  mongo:
+    container_name: db-futbol-matches
+    image: mongo:latest
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: q1w2e3r4
+    networks:
+      - backend
 
 networks:
   backend:

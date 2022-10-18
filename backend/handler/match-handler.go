@@ -3,15 +3,15 @@ package handler
 import (
 	"backend/model"
 	"backend/pkg/metrics"
-	"backend/service"
+	ms "backend/service/match"
 	"encoding/json"
-	"net/http"
-
 	"github.com/go-chi/chi/v5"
+	"log"
+	"net/http"
 )
 
 type MatchHandler struct {
-	matchService service.MatchService
+	matchService ms.MatchService
 }
 
 func (matchHandler *MatchHandler) Create(w http.ResponseWriter, r *http.Request) {
@@ -24,11 +24,16 @@ func (matchHandler *MatchHandler) Create(w http.ResponseWriter, r *http.Request)
 		http.Error(w, "Error en los datos recibidos "+error.Error(), 400)
 		return
 	}
-	matchCreated := matchHandler.matchService.CreateMatch(match)
+	matchCreated, err := matchHandler.matchService.CreateMatch(match)
+
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		log.Fatal(err)
+		w.Write([]byte("Error creating match"))
+	}
 	metrics.CreatedMatches.Inc()
 	w.WriteHeader(http.StatusCreated)
-	w.Write([]byte(matchCreated.Id))
-
+	w.Write([]byte(matchCreated))
 }
 
 func (matchHandler *MatchHandler) GetAll(w http.ResponseWriter, r *http.Request) {
@@ -88,15 +93,16 @@ func (matchHandler *MatchHandler) AddPlayer(w http.ResponseWriter, r *http.Reque
 	added := matchHandler.matchService.AddPlayer(matchId, player)
 	if added {
 		metrics.AnnotatedUsers.Inc()
-		w.WriteHeader(http.StatusNoContent)
+		w.WriteHeader(http.StatusOK)
+		return
+	} else {
+		w.WriteHeader(http.StatusConflict)
+		http.Error(w, "El partido ya completó la cantidad de jugadores", 400)
 		return
 	}
-	http.Error(w, "El partido ya completó la cantidad de jugadores", 400)
-	return
-
 }
 
-func NewMatchHandler(ms service.MatchService) MatchHandler {
+func NewMatchHandler(ms ms.MatchService) MatchHandler {
 	return MatchHandler{
 		matchService: ms,
 	}
