@@ -1,6 +1,8 @@
 package config
 
-import "os"
+import (
+	"os"
+)
 
 // TODO: change to env variables
 
@@ -14,11 +16,11 @@ func New() Config {
 			Duration: jwt_duration,
 		},
 		DB: DB{
-			Host:     db_host,
+			Host:     os.Getenv(env_db_host),
 			Port:     db_port,
 			Database: db_database,
-			User:     db_username,
-			Pass:     db_password,
+			User:     os.Getenv(env_db_username),
+			Pass:     os.Getenv(env_db_password),
 		},
 	}
 }

@@ -14,6 +14,7 @@ import (
 	"backend/service/encrypt"
 	ms "backend/service/match"
 	us "backend/service/user"
+
 	"github.com/go-chi/chi/v5"
 )
 
@@ -21,7 +22,6 @@ func main() {
 	// config
 	metrics.Register()
 	cfg := config.New()
-
 	// repositories
 	userRepository := ur.NewUserRepository()
 	matchRepository := mr.NewMatchRepository()

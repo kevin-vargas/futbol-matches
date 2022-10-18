@@ -151,12 +151,14 @@ async def get_match_date(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
     print(match_data)
     
     r = requests.post(f"{BACKEND_URI}/matches", json = match_data)
-    if r.status_code != 201 :
+    isValid = 200 <= r.status_code < 300
+    if not isValid :
         await update.message.reply_text("algo salio mal")
         print(r.text)
         return
     await update.message.reply_text("Partido creado, id asignado:")
-    await update.message.reply_text(r.text)
+    await update.message.reply_text(r.text , reply_markup=ReplyKeyboardRemove())
+    return ConversationHandler.END
 
 async def done(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     print(context)
@@ -182,7 +184,7 @@ async def view_match(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None
     await update.message.reply_text(
         """
 Vamos a ver un partido, para esto necesito que me indique su codigo indentificador:
-        """,
+        """, reply_markup=ReplyKeyboardRemove()
     )
 
     return GET_MATCH_ID
@@ -192,7 +194,7 @@ async def get_match_id(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
 
     r = requests.get(f"{BACKEND_URI}/matches/{id}")
     if r.status_code != 200:
-        await update.message.reply_text("id invalido, ingreselo nuevamente:")
+        await update.message.reply_text("id invalido, ingreselo nuevamente:",  reply_markup=ReplyKeyboardRemove())
         return GET_MATCH_ID
     #TODO: all
     res = r.json()
@@ -223,7 +225,7 @@ async def view_metrics(update: Update, context: ContextTypes.DEFAULT_TYPE) -> in
     reply_keyboard = [["Partidos Creados"],["Jugadores Anotados"]]
 
     await update.message.reply_text(
-        "Metricas de:",
+        "Metricas de?",
         reply_markup=ReplyKeyboardMarkup(
             reply_keyboard, one_time_keyboard=True
         ),
@@ -239,12 +241,14 @@ async def get_metrics(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int
     context.user_data["metric_desc"] = metrica
     context.user_data["metric"] = metric
     await update.message.reply_text(
-        "Desde hace:",
+        "Desde hace?",
         reply_markup=ReplyKeyboardMarkup(
             reply_keyboard, one_time_keyboard=True
         ),
     )
     return GET_METRIC_TIME
+
+# TODO: get metric change to api not more prometheus
 async def get_metric_time(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     metric = context.user_data["metric"]
     metricTime = update.message.text
