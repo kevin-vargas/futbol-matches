@@ -29,7 +29,7 @@ services:
       MONGO_INITDB_ROOT_USERNAME: ${DB_USERNAME}
       MONGO_INITDB_ROOT_PASSWORD: ${DB_PASSWORD}
     container_name: db-futbol-matches
-    image: mongo:latest
+    image: mongo:6.0.2
     restart: always
     ports:
       - "27017:27017"
