@@ -2,7 +2,6 @@ package main
 
 import (
 	mr "backend/repository/match"
-	"fmt"
 	"net/http"
 
 	"backend/config"
@@ -23,7 +22,6 @@ func main() {
 	// config
 	metrics.Register()
 	cfg := config.New()
-	fmt.Println(cfg)
 	// repositories
 	userRepository := ur.NewUserRepository()
 	matchRepository := mr.NewMatchRepository()
