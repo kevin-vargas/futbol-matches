@@ -1,6 +1,20 @@
 version: "3"
 services: 
+  bot:
+    environment:
+      BACKEND_URI: http://backend:8080
+      API_TOKEN: ${API_TOKEN}
+    container_name: bot-futbol-matches
+    build: ./bot
+    image: bot-futbol-matches:latest
+    pull_policy: build
+    networks:
+      - public
   backend:
+    environment:
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_HOST: db-futbol-matches
     container_name: api-futbol-matches
     build: ./backend
     image: be-futbol-matches:latest
@@ -8,28 +22,21 @@ services:
     ports:
       - "8080:8080"
     networks:
-      - docker-service
-  prometheus:
-    container_name: prometheus
-    image: prom/prometheus:latest
-    volumes:
-            - ./metrics/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - backend
+      - public
+  mongo:
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${DB_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${DB_PASSWORD}
+    container_name: db-futbol-matches
+    image: mongo:6.0.2
+    restart: always
     ports:
-      - 9090:9090
+      - "27017:27017"
     networks:
-      - docker-service
-  grafana:
-    container_name: grafana
-    image: grafana/grafana:latest
-    volumes:
-            - ./metrics/grafana/grafana.ini:/etc/grafana/grafana.ini
-            - ./metrics/grafana/datasource.yml:/etc/grafana/provisioning/datasources/datasource.yaml
-            - ./metrics/grafana/data:/var/lib/grafana
-    ports:
-      - 3000:3000
-    networks:
-      - docker-service
-
+      - backend
 networks:
-  docker-service:
+  backend:
+    driver: bridge
+  public:
     driver: bridge

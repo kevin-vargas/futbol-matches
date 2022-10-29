@@ -1,12 +1,12 @@
-package service
+package match
 
 import (
 	"backend/model"
-	"backend/repository"
+	mr "backend/repository/match"
 )
 
 type MatchService struct {
-	repository repository.MatchRepository
+	repository mr.MatchRepository
 }
 
 func (ms *MatchService) GetAllMatches() []model.Match {
@@ -17,7 +17,7 @@ func (ms *MatchService) GetMatch(id string) model.Match {
 	return ms.repository.GetMatch(id)
 }
 
-func (ms *MatchService) CreateMatch(match model.Match) model.Match {
+func (ms *MatchService) CreateMatch(match model.Match) (string, error) {
 	if match.StartingPlayers == nil {
 		match.StartingPlayers = make([]model.Player, 0, 0)
 	}
@@ -27,15 +27,15 @@ func (ms *MatchService) CreateMatch(match model.Match) model.Match {
 	return ms.repository.CreateMatch(match)
 }
 
-func (ms *MatchService) UpdateMatch(id string, updates model.Match) model.Match {
+func (ms *MatchService) UpdateMatch(id string, updates model.Match) error {
 	currentMatch := ms.repository.GetMatch(id)
 	currentMatch = setNewValues(currentMatch, updates)
 
 	return ms.repository.UpdateMatch(currentMatch)
 }
 
-func (ms *MatchService) DeleteMatch(id string) {
-	ms.repository.DeleteMatch(id)
+func (ms *MatchService) DeleteMatch(id string) error {
+	return ms.repository.DeleteMatch(id)
 }
 
 func (ms *MatchService) AddPlayer(matchId string, player model.Player) bool {
@@ -93,6 +93,8 @@ func setNewValues(current model.Match, updates model.Match) model.Match {
 	return current
 }
 
-func NewMatchService() MatchService {
-	return MatchService{}
+func NewMatchService(matchRepo mr.MatchRepository) MatchService {
+	return MatchService{
+		repository: matchRepo,
+	}
 }
