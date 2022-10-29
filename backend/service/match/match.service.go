@@ -54,8 +54,8 @@ func (ms *MatchService) AddPlayer(matchId string, player model.Player) bool {
 }
 
 func setNewValues(current model.Match, updates model.Match) model.Match {
-	if updates.Description != "" && (updates.Description != current.Description) {
-		current.Description = updates.Description
+	if updates.Owner != "" && (updates.Owner != current.Owner) {
+		current.Owner = updates.Owner
 	}
 
 	if updates.Finished != current.Finished {

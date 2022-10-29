@@ -16,6 +16,7 @@ import (
 	us "backend/service/user"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/rs/cors"
 )
 
 func main() {
@@ -52,8 +53,10 @@ func main() {
 	router.SetupDefaultRoutes(r, metrics.NewHandler())
 	router.SetupAuthRoutes(r, ha)
 	router.SetupMatchCrudRoutes(r, mh)
+
 	router.SetupUserCrudRoutes(r, uh)
-	err := http.ListenAndServe(cfg.App.Port, r)
+	err := http.ListenAndServe(cfg.App.Port, cors.AllowAll().Handler(r))
+
 	if err != nil {
 		panic(err)
 	}

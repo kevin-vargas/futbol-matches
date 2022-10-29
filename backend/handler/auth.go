@@ -4,6 +4,7 @@ import (
 	"backend/model"
 	"backend/pkg/metrics"
 	"backend/service/user"
+	"encoding/json"
 	"net/http"
 )
 
@@ -44,8 +45,12 @@ func (a *Auth) Login(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("invalid username or password"))
 		return
 	}
+
 	w.Header().Add("Authorization", "Bearer "+token)
-	w.WriteHeader(http.StatusNoContent)
+	w.Header().Set("Content-type", "application/json")
+	w.WriteHeader(http.StatusOK)
+
+	json.NewEncoder(w).Encode(token)
 }
 
 func NewAuth(service user.UserService) Auth {

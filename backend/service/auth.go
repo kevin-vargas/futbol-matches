@@ -4,6 +4,7 @@ import (
 	"backend/model"
 	"backend/repository"
 	"context"
+	"encoding/json"
 	"errors"
 )
 
@@ -42,20 +43,33 @@ func (a *auth) SignUp(ctx context.Context, u *model.User) (bool, error) {
 	return true, nil
 }
 
-func (a *auth) Login(ctx context.Context, username string, password string) (string, error) {
+func (a *auth) Login(ctx context.Context, username string, password string) (string, model.User, error) {
 	user, err := a.r.FindOne(username)
+	bytes, err := json.Marshal(user)
+
 	if err != nil {
-		return "", errors.New("error on repository")
+		return "", model.User{}, errors.New("error on repository")
 	}
 	if user != nil {
 		if ok, err := a.e.Compare(user.Password, password); err == nil && ok {
-			return a.j.Generate(user.Username)
+
+			userModel := model.User{
+				Username: user.Username,
+				Password: user.Username,
+				Name:     user.Name,
+				Lastname: user.Lastname,
+				Phone:    user.Phone,
+				Email:    user.Email,
+			}
+
+			str, e := a.j.Generate(string(bytes))
+			return str, userModel, e
 		}
 		if err != nil {
-			return "", err
+			return "", model.User{}, err
 		}
 	}
-	return "", nil
+	return "", model.User{}, nil
 }
 
 func NewAuth(r repository.User, e Encrypt, j JWT) Auth {
