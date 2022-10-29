@@ -12,9 +12,7 @@ services:
       - public
   backend:
     environment:
-      DB_USERNAME: ${DB_USERNAME}
-      DB_PASSWORD: ${DB_PASSWORD}
-      DB_HOST: db-futbol-matches
+      DB_CONNECTION_URI: ${DB_CONNECTION_URI}
     container_name: api-futbol-matches
     build: ./backend
     image: be-futbol-matches:latest

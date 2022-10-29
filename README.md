@@ -4,7 +4,21 @@
 
 **Requirements:** golang 1.18 docker 20.10.12
 
-**Start (build included):**
+**Production (build included):**
+
+build images, push to registry and apply kubernetes manifest
+
+```shell
+    make prod
+```
+
+generate secrets
+
+```shell
+    make sec
+```
+
+**Development (build included):**
 
 start components
 ```shell
@@ -42,7 +56,15 @@ The test runner includes the package code coverage. To get a detailed code repor
 
 ## Live API
 
-**Backend:**
+**Backend-prod:**
+
+The api can be tested on the following domain
+
+```
+    https://api-futbol-matches-service-kevin-vargas.cloud.okteto.net
+```
+
+**Backend-dev:**
 
 The api can be tested on the following domain
 
@@ -54,7 +76,7 @@ The api can be tested on the following domain
 
 To talk to the bot simply add it to telegram and send the next message:
 ```
-    /comenzar
+    /empezar
 ```
 <p align="middle">
 <img src="https://i.ibb.co/PFbmmFq/telegram-bot-qr-3.jpg" alt="Futbol Bot QR" width="200"/>

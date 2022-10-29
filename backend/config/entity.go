@@ -12,11 +12,8 @@ type JWT struct {
 }
 
 type DB struct {
-	Host     string
-	Port     string
-	Database string
-	User     string
-	Pass     string
+	Database      string
+	ConnectionURI string
 }
 
 type Config struct {

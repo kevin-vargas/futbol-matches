@@ -12,3 +12,8 @@ test:
 coverage:
 	cd backend; \
 	${DIR}/coverage.sh; 
+prod:
+	@./publish/prod/build.sh
+
+sec:
+	kubectl apply -f ./secrets/secrets.yml

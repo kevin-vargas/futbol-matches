@@ -3,23 +3,23 @@ package database
 import (
 	"backend/config"
 	"context"
+	"log"
+
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	"log"
 )
 
 var Ctx = context.TODO()
 
 func Setup() *mongo.Client {
 	dbConfig := config.New().DB
-	connectionURI := "mongodb://" + dbConfig.Host + ":" + dbConfig.Port + "/"
 
-	credentials := options.Credential{
-		Username: dbConfig.User,
-		Password: dbConfig.Pass,
-	}
+	connectionURI := dbConfig.ConnectionURI
 
-	clientOptions := options.Client().ApplyURI(connectionURI).SetAuth(credentials)
+	serverAPIOptions := options.ServerAPI(options.ServerAPIVersion1)
+
+	clientOptions := options.Client().ApplyURI(connectionURI).SetServerAPIOptions(serverAPIOptions)
+
 	client, err := mongo.Connect(Ctx, clientOptions)
 	if err != nil {
 		log.Fatal(err)
@@ -29,6 +29,6 @@ func Setup() *mongo.Client {
 	if err != nil {
 		log.Fatal(err)
 	}
-	client.Database("futbol-matches")
+	client.Database(dbConfig.Database)
 	return client
 }
