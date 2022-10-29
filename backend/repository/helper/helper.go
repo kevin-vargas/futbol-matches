@@ -1,7 +1,7 @@
 package helper
 
 import (
-	dbm "backend/database"
+	dbm "backend/database/mongodb"
 	"context"
 	"go.mongodb.org/mongo-driver/mongo"
 	"time"

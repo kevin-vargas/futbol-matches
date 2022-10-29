@@ -3,6 +3,7 @@ package match
 import (
 	"backend/model"
 	mr "backend/repository/match"
+	"backend/service/metrics"
 )
 
 type MatchService struct {
@@ -49,6 +50,7 @@ func (ms *MatchService) AddPlayer(matchId string, player model.Player) bool {
 			match.StartingPlayers = append(match.StartingPlayers, player)
 		}
 		ms.repository.UpdateMatch(match)
+		metrics.AddPlayer(player)
 		return true
 	}
 }

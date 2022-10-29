@@ -3,6 +3,7 @@ package match
 import (
 	"backend/model"
 	h "backend/repository/helper"
+	"backend/service/metrics"
 	"log"
 	"strings"
 	"time"
@@ -21,20 +22,19 @@ func (mr *MatchRepository) GetAllMatches() []model.Match {
 	userColl := h.GetCollection(mongoClient, "matches")
 	cursor, err := userColl.Find(h.GetContext(), bson.M{}, nil)
 
-	var results []model.Match
+	var results = []model.Match{}
 
-	if err != nil {
-		return []model.Match{}
-	}
-
-	for cursor.Next(h.GetContext()) {
-		var match model.Match
-		err := cursor.Decode(&match)
-		if err != nil {
-			return results
+	if err == nil {
+		for cursor.Next(h.GetContext()) {
+			var match model.Match
+			err := cursor.Decode(&match)
+			if err != nil {
+				return []model.Match{}
+			}
+			results = append(results, match)
 		}
-		results = append(results, match)
 	}
+
 	return results
 }
 
@@ -75,10 +75,11 @@ func (mr *MatchRepository) CreateMatch(match model.Match) (string, error) {
 		return "", err
 	}
 	ObjID, _ := result.InsertedID.(primitive.ObjectID)
-
 	strAux := strings.Replace(ObjID.String(), "ObjectID(\"", "", 1)
+	matchId := strings.Replace(strAux, "\")", "", 1)
+	metrics.AddMatch(match)
 
-	return strings.Replace(strAux, "\")", "", 1), nil
+	return matchId, nil
 }
 
 func (mr *MatchRepository) UpdateMatch(match model.Match) error {
