@@ -13,6 +13,7 @@ import (
 	"backend/router"
 	"backend/service/encrypt"
 	ms "backend/service/match"
+	mss "backend/service/metrics"
 	us "backend/service/user"
 
 	"github.com/go-chi/chi/v5"
@@ -34,6 +35,8 @@ func main() {
 
 	matchService := ms.NewMatchService(matchRepository)
 
+	metricsService := mss.NewMetricsService()
+
 	// handlers
 	ha := handler.NewAuth(userService)
 
@@ -42,6 +45,8 @@ func main() {
 	mh := handler.NewMatchHandler(matchService)
 
 	uh := handler.NewUserHandler(userService)
+
+	msh := handler.NewMetricsHandler(metricsService)
 
 	// global middlewares
 	r.Use(middleware.CountRequest)
@@ -53,6 +58,7 @@ func main() {
 	router.SetupAuthRoutes(r, ha)
 	router.SetupMatchCrudRoutes(r, mh)
 	router.SetupUserCrudRoutes(r, uh)
+	router.SetupMetricsRoutes(r, msh)
 	err := http.ListenAndServe(cfg.App.Port, r)
 	if err != nil {
 		panic(err)

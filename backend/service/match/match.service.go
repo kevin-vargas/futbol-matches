@@ -41,6 +41,7 @@ func (ms *MatchService) DeleteMatch(id string) error {
 
 func (ms *MatchService) AddPlayer(matchId string, player model.Player) bool {
 	match := ms.repository.GetMatch(matchId)
+	metricsService := metrics.NewMetricsService()
 	if len(match.StartingPlayers)+len(match.SubstitutePlayer) == match.MaxPlayers {
 		return false
 	} else {
@@ -50,7 +51,7 @@ func (ms *MatchService) AddPlayer(matchId string, player model.Player) bool {
 			match.StartingPlayers = append(match.StartingPlayers, player)
 		}
 		ms.repository.UpdateMatch(match)
-		metrics.AddPlayer(player)
+		metricsService.AddPlayer(player)
 		return true
 	}
 }

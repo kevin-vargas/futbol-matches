@@ -6,7 +6,7 @@ import (
 
 func GetConnection() *redis.Client {
 	rdb := redis.NewClient(&redis.Options{
-		Addr:     "futbol-matches-metrics:6379",
+		Addr:     "localhost:6379",
 		Password: "",
 		DB:       0,
 	})

@@ -62,6 +62,8 @@ func (mr *MatchRepository) GetMatch(id string) model.Match {
 
 func (mr *MatchRepository) CreateMatch(match model.Match) (string, error) {
 	mongoClient := h.GetConnection()
+	metricsService := metrics.NewMetricsService()
+
 	defer func() {
 		mongoClient.Disconnect(h.GetContext())
 	}()
@@ -77,7 +79,8 @@ func (mr *MatchRepository) CreateMatch(match model.Match) (string, error) {
 	ObjID, _ := result.InsertedID.(primitive.ObjectID)
 	strAux := strings.Replace(ObjID.String(), "ObjectID(\"", "", 1)
 	matchId := strings.Replace(strAux, "\")", "", 1)
-	metrics.AddMatch(match)
+	match.Id = matchId
+	metricsService.AddMatch(match)
 
 	return matchId, nil
 }

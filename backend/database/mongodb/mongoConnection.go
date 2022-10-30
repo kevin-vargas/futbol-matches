@@ -1,7 +1,6 @@
 package mongodb
 
 import (
-	"backend/config"
 	"context"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -11,12 +10,11 @@ import (
 var Ctx = context.TODO()
 
 func Setup() *mongo.Client {
-	dbConfig := config.New().DB
-	connectionURI := "mongodb://" + dbConfig.Host + ":" + dbConfig.Port + "/"
+	connectionURI := "mongodb://" + "localhost" + ":" + "27017" + "/"
 
 	credentials := options.Credential{
-		Username: dbConfig.User,
-		Password: dbConfig.Pass,
+		Username: "root",
+		Password: "q1w2e3r4",
 	}
 
 	clientOptions := options.Client().ApplyURI(connectionURI).SetAuth(credentials)

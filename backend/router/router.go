@@ -27,6 +27,11 @@ func SetupUserCrudRoutes(r *chi.Mux, h handler.UserHandler) {
 	r.Delete("/users/{username}", h.Delete)
 }
 
+func SetupMetricsRoutes(r *chi.Mux, h handler.MetricsHandler) {
+	r.Get("/metrics/matches", h.GetMatches)
+	r.Get("/metrics/players", h.GetPlayers)
+}
+
 func SetupMatchCrudRoutes(r *chi.Mux, h handler.MatchHandler) {
 	r.Get("/matches", h.GetAll)
 	r.Get("/matches/{id}", h.Get)
