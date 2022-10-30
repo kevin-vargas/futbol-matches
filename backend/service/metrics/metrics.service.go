@@ -72,11 +72,19 @@ func getPatterns() (string, string, string) {
 
 func getPattern(time time.Time) string {
 	hour := time.Hour()
+	minutes := time.Minute()
+
 	strHour := fmt.Sprintf("%d", hour)
+	strMin := fmt.Sprintf("%d", minutes)
 
 	if hour < 10 {
 		strHour = "0" + strHour
 	}
+
+	if minutes < 10 {
+		strMin = "0" + strMin
+	}
+
 	return fmt.Sprintf("%d-%d-%d %s:*", time.Year(), time.Month(), time.Day(), strHour)
 }
 
