@@ -71,7 +71,7 @@ func (mr *MatchRepository) CreateMatch(match model.Match) (string, error) {
 	result, err := matchesColl.InsertOne(h.GetContext(), match)
 
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err.Error())
 		return "", err
 	}
 	ObjID, _ := result.InsertedID.(primitive.ObjectID)

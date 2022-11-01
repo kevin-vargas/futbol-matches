@@ -13,6 +13,9 @@ services:
   backend:
     environment:
       DB_CONNECTION_URI: ${DB_CONNECTION_URI}
+      REDIS_URI: "redis:6379"
+      REDIS_NAME: ${REDIS_NAME}
+      REDIS_PASS: ${REDIS_PASS}
     container_name: api-futbol-matches
     build: ./backend
     image: be-futbol-matches:latest
@@ -33,6 +36,14 @@ services:
       - "27017:27017"
     networks:
       - backend
+  redis:
+    container_name: metrics-futbol-matches
+    image: 'redislabs/redistimeseries:latest'
+    ports:
+      - '6379:6379'
+    networks:
+      - backend
+
 networks:
   backend:
     driver: bridge

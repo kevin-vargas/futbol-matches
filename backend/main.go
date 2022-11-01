@@ -2,6 +2,7 @@ package main
 
 import (
 	mr "backend/repository/match"
+	"backend/service"
 	"net/http"
 
 	"backend/config"
@@ -13,6 +14,7 @@ import (
 	"backend/router"
 	"backend/service/encrypt"
 	ms "backend/service/match"
+	r "backend/service/redis"
 	us "backend/service/user"
 
 	"github.com/go-chi/chi/v5"
@@ -25,6 +27,7 @@ func main() {
 	// repositories
 	userRepository := ur.NewUserRepository()
 	matchRepository := mr.NewMatchRepository()
+	metricStore := r.New(cfg.Redis)
 
 	// services
 	encryptService := encrypt.New()
@@ -34,15 +37,17 @@ func main() {
 
 	matchService := ms.NewMatchService(matchRepository)
 
+	metricService := service.NewMetric(metricStore)
 	// handlers
 	ha := handler.NewAuth(userService)
 
 	r := chi.NewRouter()
 
-	mh := handler.NewMatchHandler(matchService)
+	mh := handler.NewMatchHandler(matchService, metricStore)
 
 	uh := handler.NewUserHandler(userService)
 
+	meh := handler.NewMetric(metricService)
 	// global middlewares
 	r.Use(middleware.CountRequest)
 
@@ -53,6 +58,7 @@ func main() {
 	router.SetupAuthRoutes(r, ha)
 	router.SetupMatchCrudRoutes(r, mh)
 	router.SetupUserCrudRoutes(r, uh)
+	router.SetupMetricRoutes(r, meh)
 	err := http.ListenAndServe(cfg.App.Port, r)
 	if err != nil {
 		panic(err)

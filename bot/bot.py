@@ -7,7 +7,6 @@ import os
 
 
 BACKEND_URI=os.getenv('BACKEND_URI')
-PROMETHEUS_URI=os.getenv('PROMETHEUS_URI')
 TOKEN =os.getenv('API_TOKEN')
 
 quantity=15
@@ -248,15 +247,14 @@ async def get_metrics(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int
     )
     return GET_METRIC_TIME
 
-# TODO: get metric change to api not more prometheus
 async def get_metric_time(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     metric = context.user_data["metric"]
     metricTime = update.message.text
-    r = requests.get(f"{PROMETHEUS_URI}/api/v1/query?query={metric}&step={metricTime}")
+    r = requests.get(f"{BACKEND_URI}/metrics/{metric}?query={metricTime}")
     if r.status_code != 200:
         print(r.text)
         await update.message.reply_text("algo salio mal")
-    count = r.json().get("data").get("result")[0].get("value")[1]
+    count = r.text
     metric_desc = context.user_data["metric_desc"]
     await update.message.reply_text(f"{metric_desc} : {count}" , reply_markup=ReplyKeyboardRemove())
     return ConversationHandler.END

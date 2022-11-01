@@ -16,18 +16,47 @@ spec:
       containers:
         - name: app
           image: registry.cloud.okteto.net/kevin-vargas/be-futbol-matches:latest
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "250m"
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
           ports:
             - name: web
               containerPort: 8080
               protocol: TCP
           env:
+            - name: REDIS_URI
+              value: "redis-0.kevin-vargas.svc.cluster.local"
             - name: DB_CONNECTION_URI
               valueFrom:
                 secretKeyRef:
-                  name: api-futbol-matches
+                  name: api-futbol-matches-sec
                   key: connection_db_uri
       imagePullSecrets:
         - name: okteto-regcred
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: hpa-api-futbol-matches
+  namespace: kevin-vargas
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: api-futbol-matches
+  minReplicas: 1
+  maxReplicas: 3
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 50
 ---
 apiVersion: v1
 kind: Service
@@ -66,9 +95,47 @@ spec:
             - name: API_TOKEN
               valueFrom:
                 secretKeyRef:
-                  name: bot-futbol-matches
+                  name: bot-futbol-matches-sec
                   key: api_token
             - name: BACKEND_URI
               value: "http://api-futbol-matches-service:8000"
       imagePullSecrets:
         - name: okteto-regcred
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: redis
+  namespace: kevin-vargas
+spec:
+  selector:
+    matchLabels:
+      app: redis
+  serviceName: redis
+  replicas: 1
+  minReadySeconds: 10
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+      - name: redis
+        image: redislabs/redistimeseries:1.8.2
+        ports:
+          - containerPort: 6379
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis
+  namespace: kevin-vargas
+spec:
+  clusterIP: None
+  ports:
+  - port: 6379
+    targetPort: 6379
+    name: redis
+  selector:
+    app: redis
