@@ -16,8 +16,16 @@ type DB struct {
 	ConnectionURI string
 }
 
+type Redis struct {
+	URI       string
+	Name      string
+	Pass      *string
+	Retention int64
+}
+
 type Config struct {
-	App App
-	JWT JWT
-	DB  DB
+	App   App
+	JWT   JWT
+	DB    DB
+	Redis Redis
 }

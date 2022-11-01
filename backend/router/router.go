@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"backend/handler"
+
 	"github.com/go-chi/chi/v5"
 )
 
@@ -34,4 +35,8 @@ func SetupMatchCrudRoutes(r *chi.Mux, h handler.MatchHandler) {
 	r.Post("/matches/{id}/player", h.AddPlayer)
 	r.Patch("/matches/{id}", h.Update)
 	r.Delete("/matches/{id}", h.Delete)
+}
+
+func SetupMetricRoutes(r *chi.Mux, h handler.Metric) {
+	r.Get("/metrics/{metric}", h.GetLastMetrics)
 }

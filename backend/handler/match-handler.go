@@ -3,14 +3,19 @@ package handler
 import (
 	"backend/model"
 	"backend/pkg/metrics"
+	"backend/service"
+	metricsConstants "backend/service/metrics"
+
 	ms "backend/service/match"
 	"encoding/json"
-	"github.com/go-chi/chi/v5"
 	"log"
 	"net/http"
+
+	"github.com/go-chi/chi/v5"
 )
 
 type MatchHandler struct {
+	m            service.MetricStore
 	matchService ms.MatchService
 }
 
@@ -28,9 +33,10 @@ func (matchHandler *MatchHandler) Create(w http.ResponseWriter, r *http.Request)
 
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		log.Fatal(err)
+		log.Println(err.Error())
 		w.Write([]byte("Error creating match"))
 	}
+	matchHandler.m.Inc(metricsConstants.CREATED_MATCHES)
 	metrics.CreatedMatches.Inc()
 	w.WriteHeader(http.StatusCreated)
 	w.Write([]byte(matchCreated))
@@ -92,6 +98,7 @@ func (matchHandler *MatchHandler) AddPlayer(w http.ResponseWriter, r *http.Reque
 	}
 	added := matchHandler.matchService.AddPlayer(matchId, player)
 	if added {
+		matchHandler.m.Inc(metricsConstants.ANNOTATED_USERS)
 		metrics.AnnotatedUsers.Inc()
 		w.WriteHeader(http.StatusOK)
 		return
@@ -102,8 +109,9 @@ func (matchHandler *MatchHandler) AddPlayer(w http.ResponseWriter, r *http.Reque
 	}
 }
 
-func NewMatchHandler(ms ms.MatchService) MatchHandler {
+func NewMatchHandler(ms ms.MatchService, m service.MetricStore) MatchHandler {
 	return MatchHandler{
+		m:            m,
 		matchService: ms,
 	}
 }
