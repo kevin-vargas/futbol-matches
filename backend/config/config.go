@@ -16,11 +16,8 @@ func New() Config {
 			Duration: jwt_duration,
 		},
 		DB: DB{
-			Host:     os.Getenv(env_db_host),
-			Port:     db_port,
-			Database: db_database,
-			User:     os.Getenv(env_db_username),
-			Pass:     os.Getenv(env_db_password),
+			Database:      db_database,
+			ConnectionURI: os.Getenv(env_connection_uri),
 		},
 	}
 }

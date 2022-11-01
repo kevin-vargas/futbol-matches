@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-futbol-matches
+  namespace: kevin-vargas
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api-futbol-matches
+  template:
+    metadata:
+      labels:
+        app: api-futbol-matches
+    spec:
+      containers:
+        - name: app
+          image: registry.cloud.okteto.net/kevin-vargas/be-futbol-matches:latest
+          ports:
+            - name: web
+              containerPort: 8080
+              protocol: TCP
+          env:
+            - name: DB_CONNECTION_URI
+              valueFrom:
+                secretKeyRef:
+                  name: api-futbol-matches
+                  key: connection_db_uri
+      imagePullSecrets:
+        - name: okteto-regcred
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: api-futbol-matches-service
+  namespace: kevin-vargas
+  annotations:
+    dev.okteto.com/auto-ingress: "true"
+spec:
+  selector:
+    app: api-futbol-matches
+  ports:
+    - port: 8000
+      targetPort: 8080
+  type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bot-futbol-matches
+  namespace: kevin-vargas
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bot-futbol-matches
+  template:
+    metadata:
+      labels:
+        app: bot-futbol-matches
+    spec:
+      containers:
+        - name: app
+          image: registry.cloud.okteto.net/kevin-vargas/bot-futbol-matches:latest
+          env:
+            - name: API_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: bot-futbol-matches
+                  key: api_token
+            - name: BACKEND_URI
+              value: "http://api-futbol-matches-service:8000"
+      imagePullSecrets:
+        - name: okteto-regcred
