@@ -5,19 +5,24 @@
 DIRECTORY=$(pwd)
 BACKEND="${DIRECTORY}/backend"
 BOT="${DIRECTORY}/bot"
+FRONT="${DIRECTORY}/frontend"
+REGISTRY=$1
+DEPLOY_MANIFEST="${DIRECTORY}/${2}/deployment.yml"
 
-DEPLOY_MANIFEST="${DIRECTORY}/publish/prod/deployment.yml"
-buildAndPushBackend (){
-   local REGISTRY=registry.cloud.okteto.net/kevin-vargas
+buildAndPush (){
    local IMAGE_TAG="${REGISTRY}/$1"
-   echo $IMAGE_TAG
-   echo $2
    docker build -t $IMAGE_TAG $2
    docker push $IMAGE_TAG
 }
 
 apply() {
     kubectl apply -f $1
+}
+
+cleanUP() {
+    local JOB="front-job"
+    local NAMESPACE="tacs"
+    kubectl delete job $JOB -n $NAMESPACE
 }
 
 log() {
@@ -31,10 +36,13 @@ logt() {
 {
 
     logt "building backend and pusing image"
-    buildAndPushBackend be-futbol-matches $BACKEND
-    buildAndPushBackend bot-futbol-matches $BOT
+    buildAndPush be-futbol-matches $BACKEND
+    buildAndPush bot-futbol-matches $BOT
+    buildAndPush front-futbol-matches $FRONT
 
     logt "deploying kubernetes objects"
     apply $DEPLOY_MANIFEST
-
+    
+    logt "cleanUP environment"
+    cleanUP
 }

@@ -12,8 +12,9 @@ test:
 coverage:
 	cd backend; \
 	${DIR}/coverage.sh; 
-prod:
-	@./publish/prod/build.sh
-
+deploy-prod:
+	@./publish/build.sh registry.cloud.okteto.net/kevin-vargas prod
+deploy-dev:
+	@./publish/build.sh docker.fast.ar dev
 sec:
 	kubectl apply -f ./secrets/secrets.yml
