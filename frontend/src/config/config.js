@@ -1,5 +1,5 @@
 const config = {
-    apiHost: 'http://localhost:8080/',
+    apiHost: process.env.API_HOST,
     endpoints: {
         signup: {
             path: 'users',
