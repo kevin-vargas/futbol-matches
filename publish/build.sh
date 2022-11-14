@@ -7,7 +7,7 @@ BACKEND="${DIRECTORY}/backend"
 BOT="${DIRECTORY}/bot"
 FRONT="${DIRECTORY}/frontend"
 REGISTRY=$1
-DEPLOY_MANIFEST="${DIRECTORY}/${2}/deployment.yml"
+DEPLOY_MANIFEST="${DIRECTORY}/publish/${2}/deployment.yml"
 
 buildAndPush (){
    local IMAGE_TAG="${REGISTRY}/$1"
