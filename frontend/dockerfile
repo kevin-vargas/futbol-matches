@@ -1,0 +1,18 @@
+FROM node:16.3.0-alpine AS builder
+
+WORKDIR /app
+
+COPY index.html .
+COPY public ./public
+COPY vite.config.js .
+COPY package.json .
+COPY package-lock.json .
+COPY src ./src
+
+RUN npm i
+RUN npm run build
+RUN ls
+
+FROM alpine:latest
+
+COPY --from=builder app/dist dist
