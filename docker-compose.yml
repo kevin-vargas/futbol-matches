@@ -10,6 +10,16 @@ services:
     pull_policy: build
     networks:
       - public
+  frontend:
+    container_name: frontend-futbol-matches
+    build: ./frontend
+    image: fe-butbol-matches:latest
+    pull_policy: build
+    ports:
+      - "3000:3000"
+    networks:
+      - backend
+      - public
   backend:
     environment:
       DB_CONNECTION_URI: ${DB_CONNECTION_URI}

@@ -1,5 +1,5 @@
 const config = {
-    apiHost: 'http://localhost:8080/',
+    apiHost: 'http://api-futbol-matches:8080/',
     endpoints: {
         signup: {
             path: 'users',
