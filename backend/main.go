@@ -16,8 +16,8 @@ import (
 	ms "backend/service/match"
 	r "backend/service/redis"
 	us "backend/service/user"
-
 	"github.com/go-chi/chi/v5"
+	"github.com/rs/cors"
 )
 
 func main() {
@@ -43,7 +43,7 @@ func main() {
 
 	r := chi.NewRouter()
 
-	mh := handler.NewMatchHandler(matchService, metricStore)
+	mh := handler.NewMatchHandler(matchService, metricStore, userService)
 
 	uh := handler.NewUserHandler(userService)
 
@@ -59,7 +59,7 @@ func main() {
 	router.SetupMatchCrudRoutes(r, mh)
 	router.SetupUserCrudRoutes(r, uh)
 	router.SetupMetricRoutes(r, meh)
-	err := http.ListenAndServe(cfg.App.Port, r)
+	err := http.ListenAndServe(cfg.App.Port, cors.AllowAll().Handler(r))
 	if err != nil {
 		panic(err)
 	}

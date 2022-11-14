@@ -10,6 +10,7 @@ type Match struct {
 	Date             time.Time `bson:"date" json:"date"`
 	Time             string    `bson:"time" json:"time"`
 	Place            string    `bson:"place" json:"place"`
+	Price            float32   `bson:"price" json:"price"`
 	Format           int       `bson:"format" json:"format"`
 	MaxPlayers       int       `bson:"maxPlayers" json:"maxPlayers"`
 	StartingPlayers  []Player  `bson:"startingPlayers" json:"startingPlayers"`

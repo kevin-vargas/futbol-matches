@@ -21,7 +21,7 @@ func (mr *MatchRepository) GetAllMatches() []model.Match {
 	userColl := h.GetCollection(mongoClient, "matches")
 	cursor, err := userColl.Find(h.GetContext(), bson.M{}, nil)
 
-	var results []model.Match
+	results := []model.Match{}
 
 	if err != nil {
 		return []model.Match{}
