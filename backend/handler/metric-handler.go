@@ -30,7 +30,7 @@ func (h *Metric) GetLastMetrics(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(map[string]string{"error": "Error on query metric"})
 	}
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte(strconv.Itoa(result)))
+	json.NewEncoder(w).Encode(map[string]string{"count": strconv.Itoa(result)})
 }
 
 func NewMetric(m service.Metric) Metric {

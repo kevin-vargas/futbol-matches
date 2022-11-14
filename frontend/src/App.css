@@ -1,0 +1,88 @@
+.App {
+  background-color: #282c34;
+  background-image: url("../public/background_1.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+  text-align: center;
+}
+
+.intro-link{
+  font-weight: bold;
+  color: white;
+}
+
+.intro-title{
+  color: #0B9E63;
+}
+
+.intro-error{
+  color: red;
+}
+
+.matches-options {
+  width: 100%;
+}
+
+.matches-list {
+  height: 500px;
+  margin: 10px 200px 5px 0px;
+  width: 60%;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.match-card {
+  height: 245px;
+  width: 350px;
+  border: solid;
+  margin: auto auto 10px;
+  font-weight: bold;
+}
+
+.match-list-empty {
+  color: darkred;
+  margin-top: 100px;
+}
+
+.match-join {
+  color: darkred;
+}
+
+.match-form {
+  border: solid;
+  width: 700px;
+}
+
+.match-form-fields {
+  border: solid red;
+}
+
+.match-form-butons {
+  border: solid blue;
+}
+
+.field-margin {
+  margin-right: 10px;
+  border: solid green;
+}
+
+.column{
+  width: 50%;
+}
+
+.inline {
+  display: inline-block;
+  border: 1px solid red;
+  margin:10px;
+}
+
+.hide-div{
+  display: none;
+}
+
