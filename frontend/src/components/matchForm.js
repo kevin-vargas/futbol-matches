@@ -4,7 +4,7 @@ import {useNavigate} from "react-router-dom";
 import matchService from "../services/matchService";
 import Swal from 'sweetalert2'
 import {verifySession} from "../utils/utils";
-import BasicModal from "./playerModal";
+import JoinPlayerModal from "./playerModal";
 
 
 const MatchForm = (props) => {
@@ -157,10 +157,10 @@ const MatchForm = (props) => {
                     </div>
                 </div>
                 <br />
-                <div className="row">
+                <div className="row ">
                     <div className="col-md-6">
-                        <div className={(creating) ? "hide-div" : ''}>
-                            <span>Starting Players:
+                        <div className={(creating) ? "hide-div match-form-starting-player-list" : 'match-form-starting-player-list'}>
+                            <span className="match-form-player-list">Starting Players:
                                 {(!match || !match._id) ? '' :
 
                                     (match.startingPlayers.length <= 0) ? ' The List is empty' :
@@ -177,7 +177,7 @@ const MatchForm = (props) => {
                     </div>
                     <div className="col-md-6">
                         <div className={(creating) ? "hide-div" : ''}>
-                            <span>Substitute Players:
+                            <span className="match-form-player-list">Substitute Players:
                                 {(!match || !match._id) ? '' :
                                     (match.substitutePlayer.length <= 0) ? ' The List is empty' :
                                         match.substitutePlayer.map((player, index) => {
@@ -194,8 +194,8 @@ const MatchForm = (props) => {
                 <br />
                 <div className="row">
                     <div className="col-md-6">
-                        {(!creating && match && match._id) ? <BasicModal matchId={match._id}
-                                                                         places={(match.maxPlayers - match.startingPlayers.length - match.substitutePlayer.length)}/> :
+                        {(!creating && match && match._id) ? <JoinPlayerModal matchId={match._id}
+                                                                              places={(match.maxPlayers - match.startingPlayers.length - match.substitutePlayer.length)}/> :
                             <Button type={(!creating && match && match._id) ? "button" : "submit"}
                                     fullWidth
                                     variant="contained"

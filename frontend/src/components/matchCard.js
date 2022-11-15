@@ -15,28 +15,43 @@ export default function MatchCard(props) {
     }
 
     return (
-        <Card className="match-card" style={{backgroundColor: "transparent"}} >
-            <CardContent>
-                <Typography variant="h5" component="div">
+        <div className="container match-card">
+            <div className="row match-card-header">
+                <div className="col-md-12">
                     { match.description }
-                </Typography>
-                <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-                   Created by: { match.owner } - Match Id: { match._id }
-                </Typography>
-                <Typography variant="h5" component="div">
-                    Place: { match.place }
-                </Typography>
-                <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                    Date: { `${match.date.split("T")[0].split("-")[2]}-${match.date.split("T")[0].split("-")[1]}-${match.date.split("T")[0].split("-")[0]}` }
-                </Typography>
-                <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                    Time: { match.time }
-                </Typography>
-                <Typography variant="body2">
-                    Price per player: { match.price }
-                </Typography>
-                <Button variant="text" onClick={ handleClick}> Click to join! </Button>
-            </CardContent>
-        </Card>
+                </div>
+            </div>
+            <hr />
+            <div className="row match-card-header">
+                <div className="col-md-12">
+                    { match.place }
+                </div>
+            </div>
+            <div className="row match-card-body">
+                <div className="col-md-4">
+                    { `${match.date.split("T")[0].split("-")[2]}-${match.date.split("T")[0].split("-")[1]}-${match.date.split("T")[0].split("-")[0]}` }
+                </div>
+                <div className="col-md-4">
+                    { match.time } hs
+                </div>
+                <div className="col-md-4">
+                    ${ match.price }
+                </div>
+            </div>
+            <hr />
+            <div className="row match-card-footer">
+                <div className="col-md-4">
+                    Owner: { match.owner }
+                </div>
+                <div className="col-md-8">
+                    Id: { match._id }
+                </div>
+            </div>
+            <div className="row ">
+                <div className="col-md-12 ">
+                    <Button variant="contained" onClick={ handleClick}> Click to join! </Button>
+                </div>
+            </div>
+        </div>
     );
 }

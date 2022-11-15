@@ -19,7 +19,7 @@ const style = {
     p: 4,
 };
 
-export default function BasicModal(props) {
+export default function JoinPlayerModal(props) {
     const [open, setOpen] = useState(false);
     const [phonePlayer, setPhonePlayer] = useState('');
     const [emailPlayer, setEmailPlayer] = useState('');

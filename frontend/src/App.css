@@ -38,10 +38,36 @@
 
 .match-card {
   height: 245px;
-  width: 350px;
-  border: solid;
+  width: 60%;
   margin: auto auto 10px;
+  background-color:rgba(0, 0, 0, 0.5);
+  border-radius: 25px;
+}
+
+.match-card-header{
+  font-family: sans-serif;
+  color: mintcream;
+  font-size: larger;
   font-weight: bold;
+}
+
+.match-card-body{
+  font-family: sans-serif;
+  color: mintcream;
+  font-size: medium;
+  font-weight: normal;
+}
+
+.match-card-footer{
+  font-family: sans-serif;
+  color: lightsteelblue;
+  font-size: small;
+  font-weight: lighter;
+}
+
+.match-card-join{
+  font-weight: bold;
+  color: midnightblue;
 }
 
 .match-list-empty {
@@ -63,6 +89,16 @@
 
 .match-form-butons {
   border: solid blue;
+}
+
+.match-form-player-list {
+  color: black;
+  font-weight: normal;
+  font-size: smaller;
+}
+
+.match-form-starting-player-list{
+  text-align: left;
 }
 
 .field-margin {
