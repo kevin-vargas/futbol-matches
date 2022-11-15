@@ -28,7 +28,7 @@ func (matchHandler *MatchHandler) Create(w http.ResponseWriter, r *http.Request)
 	error := json.NewDecoder(r.Body).Decode(&match)
 
 	if error != nil {
-		http.Error(w, "Error en los datos recibidos "+error.Error(), 400)
+		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(map[string]string{"error": error.Error()})
 		return
 	}

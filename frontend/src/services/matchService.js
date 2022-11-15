@@ -23,20 +23,18 @@ const matchService = {
         matchObj.owner = match.owner
         matchObj.description = match.description
         matchObj.place = match.place
-        let splitedDate = match.date.split("-")
-        match.date = `${splitedDate[2]}-${splitedDate[1]}-${splitedDate[0]}`
-        matchObj.date = match.date+'T00:00:00Z';
-        matchObj.time = match.time;
-        matchObj.price = parseInt(match.price);
-        matchObj.format = parseInt(match.format);
-        matchObj.maxPlayers = parseInt(match.maxplayers);
+        matchObj.date = match.date
+        matchObj.time = match.time
+        matchObj.price = parseInt(match.price)
+        matchObj.format = parseInt(match.format)
+        matchObj.maxPlayers = parseInt(match.maxplayers)
 
-        const requestOptions = config.endpoints.saveMatch.requestOptions;
-        requestOptions.body = JSON.stringify(matchObj);
+        const requestOptions = config.endpoints.saveMatch.requestOptions
+        requestOptions.body = JSON.stringify(matchObj)
 
-        const url = `${config.apiHost}${config.endpoints.saveMatch.path}`;
+        const url = `${config.apiHost}${config.endpoints.saveMatch.path}`
 
-        return fetch(url, requestOptions);
+        return fetch(url, requestOptions)
     }
 }
 

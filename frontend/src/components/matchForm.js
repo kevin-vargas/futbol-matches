@@ -13,7 +13,15 @@ const MatchForm = (props) => {
     const creating = (!props.match) ? true : false
     const [match, setMatch] = useState(props.match || {})
 
-    console.log(props.match)
+    console.log("match: ", props.match)
+
+    const inputStyle = { marginRight: 10, input: { color: 'white' }, label: { color: 'white' },
+        "& .MuiInputBase-input.Mui-disabled": {
+            WebkitTextFillColor: 'white'
+        },
+        '& .MuiFormLabel-root.Mui-disabled': {
+            color: 'white',
+        }}
 
     const handleSubmit = (event) => {
         event.preventDefault()
@@ -30,7 +38,7 @@ const MatchForm = (props) => {
 
         console.log("SAVE MATCH: ", match)
 
-        matchService.saveMatch(match).then(response => {
+        matchService.saveMatch(match).then(response => response.json()).then(response => {
             if (response.status === 201) {
                 Swal.fire({
                     title: 'Match Created!',
@@ -40,10 +48,15 @@ const MatchForm = (props) => {
 
                 navigation("/matches")
             } else {
-                console.log("Error al crear el partido")
+                Swal.fire({
+                    title: "Error creating match. Verify the fields and try again.",
+                    icon: 'error',
+                    confirmButtonText: 'Ok'
+                }).then(r => console.log(r))
+                console.log("Error creating match: ", response.error)
                 navigation("/matches")
             }
-        });
+        }).catch( error => console.log("ERROR: ", error));
     }
 
     const handleCancel = () => {
@@ -59,7 +72,7 @@ const MatchForm = (props) => {
 
     return (
         <div className="container match-form">
-            <form autoComplete="off" onSubmit={handleSubmit}>
+            <form autoComplete="off" onSubmit={handleSubmit} className="form-padding">
                 <div className="row">
                     <div className="col-md-6">
                         <TextField
@@ -69,7 +82,7 @@ const MatchForm = (props) => {
                             required
                             disabled={(!creating)}
                             value={match.description}
-                            sx={{marginRight: 10}}
+                            sx={ inputStyle }
                             onChange={handleChange}/>
                     </div>
                     <div className="col-md-6">
@@ -80,6 +93,7 @@ const MatchForm = (props) => {
                             required
                             value={match.place}
                             disabled={(!creating)}
+                            sx={inputStyle}
                             onChange={handleChange}/>
                     </div>
                 </div>
@@ -87,13 +101,14 @@ const MatchForm = (props) => {
                 <div className="row">
                     <div className="col-md-6">
                         <TextField
-                            label="Date (dd-mm-yyyy)"
+                            label={(creating)? '': "Date (mm-dd-yyyy)"}
                             variant="outlined"
                             name="date"
                             required
                             value={(match.date) ? match.date.split("T")[0] : ''}
                             disabled={(!creating)}
-                            sx={{marginRight: 10}}
+                            sx={inputStyle}
+                            type="date"
                             onChange={handleChange}/>
                     </div>
                     <div className="col-md-6">
@@ -104,6 +119,7 @@ const MatchForm = (props) => {
                             required
                             value={match.time}
                             disabled={(!creating)}
+                            sx={inputStyle}
                             onChange={handleChange}/>
                     </div>
                 </div>
@@ -116,16 +132,19 @@ const MatchForm = (props) => {
                                    required
                                    value={(match.price) ? `${match.price}` : ''}
                                    disabled={(!creating)}
-                                   sx={{marginRight: 10}}
-                                   onChange={handleChange}/>
+                                   sx={inputStyle}
+                                   onChange={handleChange}
+                                   type="number" step="0.01"/>
                     </div>
                     <div className="col-md-6">
-                        <TextField label="Format ( futbol 5, 7, 11, etc)"
+                        <TextField label="Format (5, 7, 11, etc)"
                                    variant="outlined"
                                    name="format"
                                    required
                                    value={match.format}
                                    disabled={(!creating)}
+                                   sx={inputStyle}
+                                   type="number"
                                    onChange={handleChange}/>
                     </div>
                 </div>
@@ -138,7 +157,8 @@ const MatchForm = (props) => {
                                    required
                                    value={match.maxPlayers}
                                    disabled={(!creating) ? true : false}
-                                   sx={{marginRight: 10}}
+                                   sx={inputStyle}
+                                   type="number"
                                    onChange={handleChange}/>
                     </div>
                     <div className="col-md-6">
@@ -151,11 +171,13 @@ const MatchForm = (props) => {
                                            required
                                            value={(match && match.maxPlayers) ? (match.maxPlayers - match.startingPlayers.length - match.substitutePlayer.length) : ''}
                                            disabled={(match && match.maxPlayers) ? true : false}
+                                           sx={inputStyle}
                                            onChange={handleChange}
                                 />
                         }
                     </div>
                 </div>
+
                 <br />
                 <div className="row ">
                     <div className="col-md-6">

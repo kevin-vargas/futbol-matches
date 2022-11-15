@@ -1,6 +1,6 @@
 .App {
   background-color: #282c34;
-  background-image: url("../public/background_1.png");
+  background-image: url("../public/background_5.jpeg");
   background-size: cover;
   background-repeat: no-repeat;
   min-height: 100vh;
@@ -18,7 +18,7 @@
 }
 
 .intro-title{
-  color: #0B9E63;
+  color: #282c34;
 }
 
 .intro-error{
@@ -40,7 +40,7 @@
   height: 245px;
   width: 60%;
   margin: auto auto 10px;
-  background-color:rgba(0, 0, 0, 0.5);
+  background-color:rgba(0, 0, 0, 0.25);
   border-radius: 25px;
 }
 
@@ -81,8 +81,24 @@
 
 .match-form {
   width: 50%;
+  background-color:rgba(0, 0, 0, 0.25);
+  border-radius: 25px;
 }
 
+@media (max-width: 840px){
+  .match-form{
+    width: 100%;
+  }
+
+  #nav-mobile{
+    flex-direction: column;
+  }
+}
+
+.form-padding {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
 .match-form-fields {
   border: solid red;
 }
@@ -92,7 +108,7 @@
 }
 
 .match-form-player-list {
-  color: black;
+  color: wheat;
   font-weight: normal;
   font-size: smaller;
 }
@@ -124,3 +140,23 @@
   text-align: center;
 }
 
+.with-background {
+  background-color:rgba(0, 0, 1, 0.25);
+  border-radius: 25px;
+}
+
+.swal-height {
+  height: 80vh;
+}
+
+.user-form {
+  width: 50%;
+  background-color:rgba(0, 0, 0, 0.5);
+  border-radius: 25px;
+}
+
+.metrics {
+  padding: 10px;
+  background-color:rgba(0, 0, 0, 0.5);
+  border-radius: 25px;
+}

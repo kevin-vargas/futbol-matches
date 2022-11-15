@@ -42,8 +42,8 @@ function Intro(props){
 
     return (
         <div className="Intro">
-            <h2 className="intro-title">Futbol Matches</h2>
-            <Container component="main" maxWidth="xs">
+            <h1 className="intro-title">Futbol Matches</h1>
+            <Container component="main" maxWidth="xs" className="with-background">
             <CssBaseline />
             <Box
                 sx={{
@@ -51,6 +51,7 @@ function Intro(props){
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'center',
+                    color: 'withe',
                 }}
             >
 
@@ -67,6 +68,7 @@ function Intro(props){
                         name="username"
                         autoComplete="Username"
                         autoFocus
+                        sx={{ input: { color: 'white' }, label: { color: 'white' } }}
                     />
                     <TextField
                         margin="normal"
@@ -77,6 +79,7 @@ function Intro(props){
                         type="password"
                         id="password"
                         autoComplete="current-password"
+                        sx={{ input: { color: 'white' }, label: { color: 'white' } }}
                     />
                     <Button
                         type="submit"

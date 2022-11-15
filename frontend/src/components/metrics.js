@@ -34,7 +34,7 @@ const Metrics = () => {
     }, [])
 
     return (
-        <div>
+        <div className="metrics">
             Matches created last 2 hours: { matchesCreated || '' }
             <br />
             Players Joined last 2 hours: { playersJoined || ''}

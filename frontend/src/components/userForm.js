@@ -24,7 +24,8 @@ const UserForm = (props) => {
                 Swal.fire({
                     title: jsonResponse.error,
                     icon: 'error',
-                    confirmButtonText: 'Ok'
+                    confirmButtonText: 'Ok',
+                    customClass: 'swal-height'
                 }).then(r => console.log(r))
 
                 return
@@ -50,55 +51,56 @@ const UserForm = (props) => {
     }
 
     return (
-        <div className="container">
-            <form autoComplete="off" onSubmit={handleSubmit}>
+        <div className="container user-form">
+            <form autoComplete="off" onSubmit={handleSubmit} className="form-padding">
                 <div className="row ">
-                    <TextField  className="col-md-6"
-                                label= "Username"
-                                variant="outlined"
-                                name="username"
-                                required
-                                sx={{marginRight: 10}} />
+                    <div className="col-md-6">
+                        <TextField  label= "Username"
+                                    variant="outlined"
+                                    name="username"
+                                    required
+                                    sx={{marginRight: 10, input: { color: 'white' }, label: { color: 'white' }}} />
 
-                    <TextField className="col-md-6"
-                               label="Password"
-                               variant="outlined"
-                               name="password"
-                               type="password"
-                               required/>
+                    </div>
+                    <div className="col-md-6">
+                        <TextField label="Password"
+                                   variant="outlined"
+                                   name="password"
+                                   type="password"
+                                   sx={{ input: { color: 'white' }, label: { color: 'white' } }}
+                                   required/>
+                    </div>
+
+
                 </div>
                 <br/>
 
 
                 <div className="row ">
-                    <TextField className="col-md-6 "
-                               label="Name"
-                               variant="outlined"
-                               name="name"
-                               required
-                               sx={{marginRight: 10}}/>
+                    <div className="col-md-6">
+                        <TextField label="Name"
+                                   variant="outlined"
+                                   name="name"
+                                   required
+                                   sx={{marginRight: 10, input: { color: 'white' }, label: { color: 'white' }}}/>
 
-
-                    <TextField className="col-md-6" label="Email"
-                               variant="outlined"
-                               name="email"
-                               required/>
-
+                    </div>
+                    <div className="col-md-3">
+                        <TextField variant="outlined"
+                                   label="Email"
+                                   name="email"
+                                   type="email"
+                                   required
+                                   sx={{input: { color: 'white' }, label: { color: 'white' }}}/>
+                    </div>
+                    <div className="col-md-3">
+                        <TextField label="Phone"
+                                   variant="outlined"
+                                   name="phone"
+                                   required
+                                   sx={{ input: { color: 'white' }, label: { color: 'white' }}}/>
+                    </div>
                 </div>
-                <br/>
-
-                <div className="row ">
-                    <TextField className="col-md-6"
-                               label="Phone"
-                               variant="outlined"
-                               name="phone"
-                               required/>
-
-                </div>
-
-
-                <br />
-
                 <br/>
                 <div className="row">
                     <div className="col-md-6">
@@ -109,6 +111,8 @@ const UserForm = (props) => {
                         >
                             Create User
                         </Button>
+                    </div>
+                    <div className="col-md-6">
                         <Button
                             fullWidth
                             variant="contained"
