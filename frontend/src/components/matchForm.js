@@ -39,9 +39,9 @@ const MatchForm = (props) => {
         console.log("SAVE MATCH: ", match)
 
         matchService.saveMatch(match).then(response => response.json()).then(response => {
-            if (response.status === 201) {
+            if (response.matchId) {
                 Swal.fire({
-                    title: 'Match Created!',
+                    title: 'Match Created! '+response.matchId,
                     icon: 'success',
                     confirmButtonText: 'Ok'
                 }).then(r => console.log(r))
