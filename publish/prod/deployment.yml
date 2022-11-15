@@ -139,3 +139,47 @@ spec:
     name: redis
   selector:
     app: redis
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: front-futbol-matches
+  namespace: kevin-vargas
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: front-futbol-matches
+  template:
+    metadata:
+      labels:
+        app: front-futbol-matches
+    spec:
+      containers:
+        - name: app
+          image: registry.cloud.okteto.net/kevin-vargas/front-futbol-matches:latest
+          ports:
+            - name: web
+              containerPort: 3000
+              protocol: TCP
+          env:
+            - name: REACT_APP_API_HOST
+              value: "https://api-futbol-matches-service-kevin-vargas.cloud.okteto.net"
+      imagePullSecrets:
+        - name: okteto-regcred
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: front-futbol-matches-service
+  namespace: kevin-vargas
+  annotations:
+    dev.okteto.com/auto-ingress: "true"
+spec:
+  selector:
+    app: front-futbol-matches
+  ports:
+    - port: 8000
+      targetPort: 3000
+  type: LoadBalancer
+---
