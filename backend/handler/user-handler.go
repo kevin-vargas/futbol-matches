@@ -15,25 +15,27 @@ type UserHandler struct {
 
 func (userHandler *UserHandler) Create(w http.ResponseWriter, r *http.Request) {
 
+	w.Header().Set("Content-Type", "application/json")
 	var user model.User
 
 	error := json.NewDecoder(r.Body).Decode(&user)
 
 	if error != nil {
-		http.Error(w, "Error en los datos recibidos "+error.Error(), 400)
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(map[string]string{"error": error.Error()})
 		return
 	}
 
 	userCreated, error := userHandler.userService.Create(user)
 
 	if error != nil {
-		http.Error(w, error.Error(), 400)
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(map[string]string{"error": error.Error()})
 		return
 	}
 	metrics.CreatedUsers.Inc()
 	w.WriteHeader(http.StatusCreated)
-	w.Write([]byte(userCreated))
-
+	json.NewEncoder(w).Encode(map[string]string{"token": userCreated})
 }
 
 func (userHandler *UserHandler) GetAll(w http.ResponseWriter, r *http.Request) {

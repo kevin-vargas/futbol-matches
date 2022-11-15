@@ -3,6 +3,7 @@ package match
 import (
 	"backend/model"
 	mr "backend/repository/match"
+	"errors"
 )
 
 type MatchService struct {
@@ -38,10 +39,23 @@ func (ms *MatchService) DeleteMatch(id string) error {
 	return ms.repository.DeleteMatch(id)
 }
 
-func (ms *MatchService) AddPlayer(matchId string, player model.Player) bool {
+func (ms *MatchService) AddPlayer(matchId string, player model.Player) (bool, error) {
 	match := ms.repository.GetMatch(matchId)
+
+	for _, starting := range match.StartingPlayers {
+		if starting.Name == player.Name {
+			return false, errors.New("the player is part of the starting players")
+		}
+	}
+
+	for _, substitute := range match.SubstitutePlayer {
+		if substitute.Name == player.Name {
+			return false, errors.New("the player is part of the substitutes players")
+		}
+	}
+
 	if len(match.StartingPlayers)+len(match.SubstitutePlayer) == match.MaxPlayers {
-		return false
+		return false, errors.New("the match reached max number of players")
 	} else {
 		if len(match.StartingPlayers) == match.Format*2 {
 			match.SubstitutePlayer = append(match.SubstitutePlayer, player)
@@ -49,7 +63,7 @@ func (ms *MatchService) AddPlayer(matchId string, player model.Player) bool {
 			match.StartingPlayers = append(match.StartingPlayers, player)
 		}
 		ms.repository.UpdateMatch(match)
-		return true
+		return true, nil
 	}
 }
 

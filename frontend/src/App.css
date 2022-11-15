@@ -1,0 +1,162 @@
+.App {
+  background-color: #282c34;
+  background-image: url("../public/background_5.jpeg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+  text-align: center;
+}
+
+.intro-link{
+  font-weight: bold;
+  color: white;
+}
+
+.intro-title{
+  color: #282c34;
+}
+
+.intro-error{
+  color: red;
+}
+
+.matches-options {
+  width: 100%;
+}
+
+.matches-list {
+  height: 500px;
+  margin: 10px 200px 5px 0px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.match-card {
+  height: 245px;
+  width: 60%;
+  margin: auto auto 10px;
+  background-color:rgba(0, 0, 0, 0.25);
+  border-radius: 25px;
+}
+
+.match-card-header{
+  font-family: sans-serif;
+  color: mintcream;
+  font-size: larger;
+  font-weight: bold;
+}
+
+.match-card-body{
+  font-family: sans-serif;
+  color: mintcream;
+  font-size: medium;
+  font-weight: normal;
+}
+
+.match-card-footer{
+  font-family: sans-serif;
+  color: lightsteelblue;
+  font-size: small;
+  font-weight: lighter;
+}
+
+.match-card-join{
+  font-weight: bold;
+  color: midnightblue;
+}
+
+.match-list-empty {
+  color: darkred;
+  margin-top: 100px;
+}
+
+.match-join {
+  color: darkred;
+}
+
+.match-form {
+  width: 50%;
+  background-color:rgba(0, 0, 0, 0.25);
+  border-radius: 25px;
+}
+
+@media (max-width: 840px){
+  .match-form{
+    width: 100%;
+  }
+
+  #nav-mobile{
+    flex-direction: column;
+  }
+}
+
+.form-padding {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+.match-form-fields {
+  border: solid red;
+}
+
+.match-form-butons {
+  border: solid blue;
+}
+
+.match-form-player-list {
+  color: wheat;
+  font-weight: normal;
+  font-size: smaller;
+}
+
+.match-form-starting-player-list{
+  text-align: left;
+}
+
+.field-margin {
+  margin-right: 10px;
+  border: solid green;
+}
+
+.column{
+  width: 50%;
+}
+
+.inline {
+  display: inline-block;
+  border: 1px solid red;
+  margin:10px;
+}
+
+.hide-div{
+  display: none;
+}
+
+.center {
+  text-align: center;
+}
+
+.with-background {
+  background-color:rgba(0, 0, 1, 0.25);
+  border-radius: 25px;
+}
+
+.swal-height {
+  height: 80vh;
+}
+
+.user-form {
+  width: 50%;
+  background-color:rgba(0, 0, 0, 0.5);
+  border-radius: 25px;
+}
+
+.metrics {
+  padding: 10px;
+  background-color:rgba(0, 0, 0, 0.5);
+  border-radius: 25px;
+}
