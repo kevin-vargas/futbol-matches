@@ -5,6 +5,7 @@
 DIRECTORY=$(pwd)
 BACKEND="${DIRECTORY}/backend"
 BOT="${DIRECTORY}/bot"
+FRONT="${DIRECTORY}/frontend"
 
 DEPLOY_MANIFEST="${DIRECTORY}/publish/prod/deployment.yml"
 buildAndPushBackend (){
@@ -33,6 +34,7 @@ logt() {
     logt "building backend and pusing image"
     buildAndPushBackend be-futbol-matches $BACKEND
     buildAndPushBackend bot-futbol-matches $BOT
+    buildAndPushBackend front-futbol-matches $FRONT
 
     logt "deploying kubernetes objects"
     apply $DEPLOY_MANIFEST
