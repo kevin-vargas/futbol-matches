@@ -16,6 +16,7 @@ import (
 	ms "backend/service/match"
 	r "backend/service/redis"
 	us "backend/service/user"
+
 	"github.com/go-chi/chi/v5"
 	"github.com/rs/cors"
 )
@@ -59,8 +60,24 @@ func main() {
 	router.SetupMatchCrudRoutes(r, mh)
 	router.SetupUserCrudRoutes(r, uh)
 	router.SetupMetricRoutes(r, meh)
-	err := http.ListenAndServe(cfg.App.Port, cors.AllowAll().Handler(r))
+	err := http.ListenAndServe(cfg.App.Port, getCors().Handler(r))
 	if err != nil {
 		panic(err)
 	}
+}
+
+func getCors() *cors.Cors {
+	return cors.New(cors.Options{
+		AllowedOrigins: []string{"*"},
+		AllowedMethods: []string{
+			http.MethodHead,
+			http.MethodGet,
+			http.MethodPost,
+			http.MethodPut,
+			http.MethodPatch,
+			http.MethodDelete,
+		},
+		AllowedHeaders:   []string{"*"},
+		AllowCredentials: true,
+	})
 }
