@@ -16,6 +16,9 @@ const Matches = (props) => {
     useEffect(() => {
         matchService.getMatches().then(response => response.json()).then(jsonResponse => {
             console.log("Response json: ", jsonResponse);
+            jsonResponse.sort(function(a,b){
+                return new Date(b.created_at) - new Date(a.created_at);
+            });
             setMatches(jsonResponse);
         });
     }, [])
@@ -33,36 +36,39 @@ const Matches = (props) => {
     }
 
     return (
-        <section className="row">
-            <div className="md-col-12 matches-options">
-                <Stack direction="row" spacing={50}>
+        <div className="container">
+            <div className="row">
+                <div className="col-md-4">
                     <Button variant="contained" color="success" onClick={ handleCreateMatch }>
                         Create Match
                     </Button>
-
+                </div>
+                <div className="col-md-4">
                     {
                         (username === 'admin') &&
                         <Button variant="contained" color="success" onClick={ handleViewMetrics }>
                             View Metrics
                         </Button>
                     }
-
+                </div>
+                <div className="col-md-4">
                     <Button variant="contained" color="error" onClick={ handleLogout }>
                         Logout
                     </Button>
-                </Stack>
+                </div>
             </div>
-
-            <div className="md-col-12 matches-list">
-                {
-                    (matches.length > 0) ?
-                        matches.map((match, index) => {
-                            return <MatchCard match={match} key={index}/>
-                        }) :
-                        <strong className="match-list-empty">There is no matches created yet!</strong>
-                }
+            <div className="row center">
+                <div className="md-col-12 matches-list">
+                    {
+                        (matches.length > 0) ?
+                            matches.map((match, index) => {
+                                return <MatchCard match={match} key={index}/>
+                            }) :
+                            <strong className="match-list-empty">There is no matches created yet!</strong>
+                    }
+                </div>
             </div>
-        </section>
+        </div>
     )
 }
 

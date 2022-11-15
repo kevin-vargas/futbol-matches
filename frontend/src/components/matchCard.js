@@ -27,7 +27,7 @@ export default function MatchCard(props) {
                     Place: { match.place }
                 </Typography>
                 <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                    Date: { match.date.split("T")[0] }
+                    Date: { `${match.date.split("T")[0].split("-")[2]}-${match.date.split("T")[0].split("-")[1]}-${match.date.split("T")[0].split("-")[0]}` }
                 </Typography>
                 <Typography sx={{ mb: 1.5 }} color="text.secondary">
                     Time: { match.time }

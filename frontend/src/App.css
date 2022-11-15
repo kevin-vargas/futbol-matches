@@ -32,7 +32,6 @@
 .matches-list {
   height: 500px;
   margin: 10px 200px 5px 0px;
-  width: 60%;
   overflow-y: auto;
   overflow-x: hidden;
 }
@@ -55,8 +54,7 @@
 }
 
 .match-form {
-  border: solid;
-  width: 700px;
+  width: 50%;
 }
 
 .match-form-fields {
@@ -84,5 +82,9 @@
 
 .hide-div{
   display: none;
+}
+
+.center {
+  text-align: center;
 }
 

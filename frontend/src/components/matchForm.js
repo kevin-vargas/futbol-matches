@@ -28,8 +28,10 @@ const MatchForm = (props) => {
         match.maxplayers = event.target.maxplayers.value
         match.price = event.target.price.value
 
+        console.log("SAVE MATCH: ", match)
+
         matchService.saveMatch(match).then(response => {
-            if(response.status === 201) {
+            if (response.status === 201) {
                 Swal.fire({
                     title: 'Match Created!',
                     icon: 'success',
@@ -37,8 +39,7 @@ const MatchForm = (props) => {
                 }).then(r => console.log(r))
 
                 navigation("/matches")
-            }
-            else {
+            } else {
                 console.log("Error al crear el partido")
                 navigation("/matches")
             }
@@ -54,156 +55,160 @@ const MatchForm = (props) => {
         matchChanged[event.target.name] = event.target.value
         const merged = {...match, ...matchChanged};
         setMatch(merged)
-
     }
 
     return (
-
-        <div className="container">
+        <div className="container match-form">
             <form autoComplete="off" onSubmit={handleSubmit}>
-                <div className="row ">
-                    <TextField  className="col-md-6"
-                        label= "Description"
-                                variant="outlined"
-                                name="description"
-                                required
-                                disabled={(!creating)}
-                                value={match.description}
-                                sx={{marginRight: 10}}
-                                onChange={ handleChange }/>
-
-                    <TextField className="col-md-6"
-                               label="Place"
-                               variant="outlined"
-                               name="place"
-                               required
-                               value={match.place}
-                               disabled={(!creating)}
-                               onChange={ handleChange }/>
+                <div className="row">
+                    <div className="col-md-6">
+                        <TextField
+                            label="Description"
+                            variant="outlined"
+                            name="description"
+                            required
+                            disabled={(!creating)}
+                            value={match.description}
+                            sx={{marginRight: 10}}
+                            onChange={handleChange}/>
+                    </div>
+                    <div className="col-md-6">
+                        <TextField
+                            label="Place"
+                            variant="outlined"
+                            name="place"
+                            required
+                            value={match.place}
+                            disabled={(!creating)}
+                            onChange={handleChange}/>
+                    </div>
                 </div>
                 <br/>
-
-
-                <div className="row ">
-                        <TextField className="col-md-6 "
-                        label="Date (yyyy-mm-dd)"
-                                   variant="outlined"
-                                   name="date"
-                                   required
-                                   value={(match.date)? match.date.split("T")[0] : ''}
-                                   disabled={(!creating)}
-                                   sx={{marginRight: 10}}
-                                   onChange={ handleChange }/>
-
-
-                    <TextField className="col-md-6" label="Time"
-                               variant="outlined"
-                               name="time"
-                               required
-                               value={match.time}
-                               disabled={(!creating)}
-                               onChange={ handleChange }/>
-
+                <div className="row">
+                    <div className="col-md-6">
+                        <TextField
+                            label="Date (dd-mm-yyyy)"
+                            variant="outlined"
+                            name="date"
+                            required
+                            value={(match.date) ? match.date.split("T")[0] : ''}
+                            disabled={(!creating)}
+                            sx={{marginRight: 10}}
+                            onChange={handleChange}/>
+                    </div>
+                    <div className="col-md-6">
+                        <TextField
+                            label="Time"
+                            variant="outlined"
+                            name="time"
+                            required
+                            value={match.time}
+                            disabled={(!creating)}
+                            onChange={handleChange}/>
+                    </div>
                 </div>
                 <br/>
-
-
-                <div className="row ">
-                        <TextField className="col-md-6"
-                            label="Price per player"
+                <div className="row">
+                    <div className="col-md-6">
+                        <TextField label="Price per player"
                                    variant="outlined"
                                    name="price"
                                    required
-                                   value={ (match.price) ? `${match.price}` : '' }
+                                   value={(match.price) ? `${match.price}` : ''}
                                    disabled={(!creating)}
                                    sx={{marginRight: 10}}
-                                   onChange={ handleChange }/>
-
-
-                        <TextField className="col-md-6"
-                            label="Format ( futbol 5, 7, 11, etc)"
+                                   onChange={handleChange}/>
+                    </div>
+                    <div className="col-md-6">
+                        <TextField label="Format ( futbol 5, 7, 11, etc)"
                                    variant="outlined"
                                    name="format"
                                    required
                                    value={match.format}
                                    disabled={(!creating)}
-                                   onChange={ handleChange }/>
-
+                                   onChange={handleChange}/>
+                    </div>
                 </div>
-
-
                 <br />
                 <div className="row">
-                        <TextField className="col-md-6"
-                            label="Max Players"
+                    <div className="col-md-6">
+                        <TextField label="Max Players"
                                    variant="outlined"
                                    name="maxplayers"
                                    required
                                    value={match.maxPlayers}
-                                   disabled={(!creating) ? true: false}
+                                   disabled={(!creating) ? true : false}
                                    sx={{marginRight: 10}}
-                                   onChange={ handleChange }/>
-
-                    {
-                        (creating) ? '' :
-                            <TextField className="col-md-6"
-                                       label="Remaining Places"
-                                       variant="outlined"
-                                       name="remainingPlaces"
-                                       required
-                                       value={ (match && match.maxPlayers) ? (match.maxPlayers - match.startingPlayers.length - match.substitutePlayer.length) : ''}
-                                       disabled={(match && match.maxPlayers)?true: false}
-                                       onChange={ handleChange }
-                            />
-                    }
+                                   onChange={handleChange}/>
+                    </div>
+                    <div className="col-md-6">
+                        {
+                            (creating) ? '' :
+                                <TextField className="col-md-6"
+                                           label="Remaining Places"
+                                           variant="outlined"
+                                           name="remainingPlaces"
+                                           required
+                                           value={(match && match.maxPlayers) ? (match.maxPlayers - match.startingPlayers.length - match.substitutePlayer.length) : ''}
+                                           disabled={(match && match.maxPlayers) ? true : false}
+                                           onChange={handleChange}
+                                />
+                        }
+                    </div>
                 </div>
                 <br />
-
-                    <div className={(creating)? "hide-div": ''}>
-                            <span >Starting Players:
-                            { (!match || !match._id) ? '' :
-
-                                (match.startingPlayers.length <= 0 ) ? ' The List is empty' :
-                                    match.startingPlayers.map( (player, index) => {
-                                        return (
-                                            <li key={index}>
-                                                {player.name}
-                                            </li>
-                                        )
-                                    })
-                            }
-                            </span>
-                            <span >Substitute Players:
-                            { ( !match || !match._id) ? '' :
-                                (match.substitutePlayer.length <= 0 ) ? ' The List is empty' :
-                                    match.substitutePlayer.map( (player, index) => {
-                                        return (
-                                            <li key={index}>
-                                                {player.name}
-                                            </li>
-                                        )
-                                    })
-                            }</span>
-                    </div>
-
-                <br/>
                 <div className="row">
                     <div className="col-md-6">
-                        { (!creating && match && match._id) ? <BasicModal matchId={match._id} places={(match.maxPlayers - match.startingPlayers.length - match.substitutePlayer.length)}/> :
-                            <Button type={ (!creating && match && match._id)? "button" : "submit"}
+                        <div className={(creating) ? "hide-div" : ''}>
+                            <span>Starting Players:
+                                {(!match || !match._id) ? '' :
+
+                                    (match.startingPlayers.length <= 0) ? ' The List is empty' :
+                                        match.startingPlayers.map((player, index) => {
+                                            return (
+                                                <li key={index}>
+                                                    {player.name}
+                                                </li>
+                                            )
+                                        })
+                                }
+                            </span>
+                        </div>
+                    </div>
+                    <div className="col-md-6">
+                        <div className={(creating) ? "hide-div" : ''}>
+                            <span>Substitute Players:
+                                {(!match || !match._id) ? '' :
+                                    (match.substitutePlayer.length <= 0) ? ' The List is empty' :
+                                        match.substitutePlayer.map((player, index) => {
+                                            return (
+                                                <li key={index}>
+                                                    {player.name}
+                                                </li>
+                                            )
+                                        })
+                                }</span>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div className="row">
+                    <div className="col-md-6">
+                        {(!creating && match && match._id) ? <BasicModal matchId={match._id}
+                                                                         places={(match.maxPlayers - match.startingPlayers.length - match.substitutePlayer.length)}/> :
+                            <Button type={(!creating && match && match._id) ? "button" : "submit"}
                                     fullWidth
                                     variant="contained"
-                                    sx={{mt: 3, mb: 2}}
                             >
                                 Create Match
                             </Button>
                         }
-
+                    </div>
+                    <div className="col-md-6">
                         <Button
                             fullWidth
                             variant="contained"
                             color="error"
-                            sx={{mt: 3, mb: 2}}
                             onClick={handleCancel}
                         >
                             Cancel
@@ -212,7 +217,7 @@ const MatchForm = (props) => {
                 </div>
             </form>
         </div>
-    )
+        )
 }
 
 export default MatchForm;

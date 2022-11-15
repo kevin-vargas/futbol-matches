@@ -19,7 +19,7 @@ const Match = (props) => {
     }, [])
 
     return (
-        <div>
+        <div className="container">
             {
                 (match._id) && <MatchForm match={match} />
             }

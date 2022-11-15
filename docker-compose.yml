@@ -11,6 +11,8 @@ services:
     networks:
       - public
   frontend:
+    environment:
+      API_HOST: ${API_HOST}
     container_name: frontend-futbol-matches
     build: ./frontend
     image: gnradrian/fe-futbol-matches
